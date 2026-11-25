@@ -36,6 +36,7 @@
       canonHeroLeft: 'The Foundational Canon<span class="hide-sm"><i class="ln"></i>Landmark papers & investor letters</span>',
       canonHeroRight: "Timeless mental models · 1949–2025",
       canonHint: "Drag or click spines to browse · Double-click center cover to open",
+      touchHint: "Swipe or tap spines to browse · Tap center cover to open",
       choosePillar: "Four investing pillars",
       worksThisWeek: "works this week",
       openPillar: "Open",
@@ -151,6 +152,7 @@
       canonHeroLeft: 'قفسه آثار ماندگار (The Canon)<span class="hide-sm"><i class="ln"></i>مقالات بنیادین و نامه‌های سرمایه‌گذاران</span>',
       canonHeroRight: "چارچوب‌های فکری ماندگار · 1949–2025",
       canonHint: "برای مرور بکشید یا روی عطف‌ها کلیک کنید · دوبار کلیک روی کاور وسط برای باز کردن",
+      touchHint: "برای مرور بکشید یا روی عطف‌ها بزنید · لمس کاور وسط برای باز کردن",
       choosePillar: "چهار ستون چارچوب فکری سرمایه‌گذار",
       worksThisWeek: "پژوهش این هفته",
       openPillar: "ورود به بخش",
@@ -317,8 +319,14 @@
   const $ = (s, r = document) => r.querySelector(s);
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const pub = p => ALIAS[p] || p || "";
-  const REGION = (() => { try { return new Intl.DisplayNames(["en"], { type: "region" }); } catch (e) { return null; } })();
-  const cname = iso => { try { return (REGION && REGION.of(iso)) || iso; } catch (e) { return iso; } };
+  const REGION_EN = (() => { try { return new Intl.DisplayNames(["en"], { type: "region" }); } catch (e) { return null; } })();
+  const REGION_FA = (() => { try { return new Intl.DisplayNames(["fa"], { type: "region" }); } catch (e) { return null; } })();
+  const cname = iso => {
+    try {
+      const reg = LANG === "fa" ? REGION_FA : REGION_EN;
+      return (reg && reg.of(iso)) || (WORLD && WORLD[iso]?.n) || iso;
+    } catch (e) { return (WORLD && WORLD[iso]?.n) || iso; }
+  };
   let LOGOS = {};
   const brandOf = p => LOGOS[p] || {};
   const initials = p => pub(p).replace(/[^A-Za-z ]/g, " ").split(/\s+/).filter(w => w && !/^(of|and|the|for|de|la|in|on)$/i.test(w)).slice(0, 2).map(w => w[0]).join("").toUpperCase() || "•";
@@ -332,13 +340,18 @@
   const pubTag = (p, n = 40) => `<span class="pub">${plogo(p)}<span class="en">${esc(trim(pub(p), n))}</span></span>`;
   const flag = iso => /^[A-Z]{2}$/.test(iso) ? `<img class="flag" src="flags/${iso.toLowerCase()}.png" alt="" loading="lazy" decoding="async">` : "";
 
-  const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const MON_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const MON_FA = ["ژانویه", "فوریه", "مارس", "آوریل", "مه", "ژوئن", "ژوئیه", "اوت", "سپتامبر", "اکتبر", "نوامبر", "دسامبر"];
   const DOW = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const mon = m => (LANG === "fa" ? MON_FA[m] : MON_EN[m]);
   const ymd = s => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ""); return m ? { y: +m[1], m: +m[2] - 1, d: +m[3] } : null; };
   const dnum = s => { const x = ymd(s); return x ? Date.UTC(x.y, x.m, x.d) / 864e5 : NaN; };
-  const fmtDay = s => { const x = ymd(s); return x ? `${x.d} ${MON[x.m]}` : (s || ""); };
-  const fmtFull = s => { const x = ymd(s); return x ? `${x.d} ${MON[x.m]} ${x.y}` : (s || ""); };
-  const fmtRange = (a, b) => { const x = ymd(a), y = ymd(b); if (!x || !y) return ""; return x.m === y.m ? `${x.d}–${y.d} ${MON[y.m]}` : `${x.d} ${MON[x.m]} – ${y.d} ${MON[y.m]}`; };
+  const fmtDayEn = s => { const x = ymd(s); return x ? `${x.d} ${MON_EN[x.m]}` : (s || ""); };
+  const fmtDay = s => { const x = ymd(s); return x ? `${x.d} ${mon(x.m)}` : (s || ""); };
+  const fmtFull = s => { const x = ymd(s); return x ? `${x.d} ${mon(x.m)} ${x.y}` : (s || ""); };
+  const fmtRange = (a, b) => { const x = ymd(a), y = ymd(b); if (!x || !y) return ""; return x.m === y.m ? `${x.d}–${y.d} ${mon(y.m)}` : `${x.d} ${mon(x.m)} – ${y.d} ${mon(y.m)}`; };
+  const isTouchDevice = () => matchMedia("(pointer: coarse)").matches;
+  const shelfHint = k => (isTouchDevice() ? T("touchHint") : T(k));
   const trim = (s, n) => (s && s.length > n ? s.slice(0, n).replace(/\s+\S*$/, "") + "…" : s || "");
   const seed = str => { let h = 1779033703 ^ str.length; for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); } return () => { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; }; };
 
@@ -491,7 +504,7 @@
     const code = it.canon ? "CANON CLASSIC" : (KIND[it.kind]?.label || "WORK").toUpperCase();
     const bw = 24 + code.length * 10.6;
     s += `<rect x="36" y="828" width="${bw}" height="34" fill="${it.canon ? ink : "none"}" stroke="${ink}" stroke-width="2"/><text x="48" y="851" font-family="Inter Tight, sans-serif" font-weight="800" font-size="15" letter-spacing="1.4" fill="${it.canon ? cream : ink}">${code}</text>`;
-    const dtTxt = it.canon ? String(it.year || "") : fmtDay(it.date).toUpperCase();
+    const dtTxt = it.canon ? String(it.year || "") : fmtDayEn(it.date).toUpperCase();
     s += `<text x="438" y="851" text-anchor="end" font-family="Inter Tight, sans-serif" font-weight="700" font-size="14" letter-spacing="1.8" fill="${ink}">${esc(dtTxt)}</text>`;
     return s;
   }
@@ -614,24 +627,24 @@
 
     function measure() {
       W = hero.clientWidth; HH = hero.clientHeight;
-      const phone = W < 768;
-      H = phone ? Math.min(W * .64, HH * .38) : Math.min(HH * .46, W * .31, 350);
+      const phone = W < 768, compactDesk = !phone && HH < 620;
+      H = phone ? Math.min(W * .58, HH * .35) : Math.min(HH * (compactDesk ? .44 : .48), W * .31, 410);
       ws = H * 142 / 840; d = H * 474 / 900; gap = H * .036;
-      U = H * (phone ? 1.05 : 1.3); cy = HH * (phone ? .42 : .40);
+      U = H * (phone ? 1.05 : 1.3); cy = HH * (phone ? .36 : (compactDesk ? .38 : .41));
       hero.style.setProperty("--H", H + "px"); hero.style.setProperty("--ws", ws + "px"); hero.style.setProperty("--d", d + "px");
       shelf.style.top = (cy - H / 2 - 50) + "px"; shelf.style.height = (H + 100) + "px";
       floor.style.top = (cy + H * .47 - H * .13) + "px"; floor.style.width = Math.min(W * .96, H * 3.6) + "px"; floor.style.height = H * .26 + "px";
       XS = []; let acc = 0;
       for (let u = 0; u <= 3 * U + 2; u += 2) { XS.push(acc); acc += 2 / (1 + Math.pow(u / U, 1.6)); }
       ring.style.left = (W / 2 - d / 2 - 6 - 21) + "px"; ring.style.top = (cy + .36 * H - 21) + "px";
-      const capTop = cy + H / 2 + HH * .038;
+      const capTop = cy + H / 2 + (phone ? Math.max(10, HH * .026) : HH * .036);
       cap.style.top = capTop + "px";
       const off = phone ? W / 2 - 26 : Math.min(W * .31, 340);
       prev.style.top = next.style.top = (capTop + 14) + "px";
       prev.style.left = (W / 2 - off - 22) + "px"; next.style.left = (W / 2 + off - 22) + "px";
       hero.querySelectorAll(".halftone").forEach(el => {
-        const len = el.textContent.length;
-        el.style.setProperty("--ks", Math.min(W * (phone ? .18 : .12), HH * .82 / (len * .66), HH * .18 * 1.4) + "px");
+        const len = Math.max(7, el.textContent.length);
+        el.style.setProperty("--ks", Math.min(W * (phone ? .16 : .115), HH * .74 / (len * .72), HH * .22) + "px");
       });
     }
     measure();
@@ -755,8 +768,10 @@
       if (!drag || e.pointerId !== drag.id) return;
       const dd = drag; drag = null; shelf.classList.remove("dragging");
       if (dd.moved) { Tt = Math.round(Tt); lastTap = { id: null, t: 0 }; return; }
+      const isTouch = e.pointerType === "touch" || (e.pointerType !== "mouse" && isTouchDevice());
       if (isCenterHit(e, dd.v)) {
-        tapCenter();
+        if (isTouch && Math.abs(Tt - s) < .35) openActive();
+        else tapCenter();
         return;
       }
       if (dd.v == null) return;
@@ -777,7 +792,12 @@
     prev.addEventListener("click", () => step(-1));
     next.addEventListener("click", () => step(1));
     ring.addEventListener("click", openActive);
-    cap.addEventListener("click", tapCenter);
+    let capPtr = "mouse";
+    cap.addEventListener("pointerdown", e => { capPtr = e.pointerType || "mouse"; });
+    cap.addEventListener("click", () => {
+      if (capPtr === "touch" || (capPtr !== "mouse" && isTouchDevice())) openActive();
+      else tapCenter();
+    });
     ruler.addEventListener("click", e => {
       const r = ruler.getBoundingClientRect(), day = Math.max(0, Math.min(6, Math.floor((e.clientX - r.left) / r.width * 7)));
       const cur = idx(Tt); let best = null;
@@ -850,9 +870,9 @@
     document.title = T("siteTitle");
     $("#view").innerHTML = shelfHeroHtml({
       c: cvar(shelfItems[0]?.topic), ht: "var(--brand-ink)", words: ["LONG HORIZON", "BASE RATE"],
-      label: "Featured weekly & canonical research", has: shelfItems.length > 0, hint: T("homeHint"),
+      label: "Featured weekly & canonical research", has: shelfItems.length > 0, hint: shelfHint("homeHint"),
       left: T("homeHeroLeft"),
-      right: `<span class="en">${fmtRange(latest.start, latest.end)}</span><i class="ln"></i>${T("homeHeroRight")}`,
+      right: `<bdi>${fmtRange(latest.start, latest.end)}</bdi><i class="ln"></i>${T("homeHeroRight")}`,
     }) + `
       <section class="wrap pillars" aria-labelledby="hPill">
         <div class="sec-h"><h2 id="hPill">${T("choosePillar")}</h2>${reelBtn(latest.week)}</div>
@@ -884,7 +904,7 @@
     document.title = `${T("modeCanon")} · Market Research Hub`;
     $("#view").innerHTML = shelfHeroHtml({
       c: cvar(state.canon[0]?.topic), ht: "var(--brand-ink)", words: ["THE CANON", "FOUNDATIONS"],
-      label: "Foundational Investing Canon", has: state.canon.length > 0, hint: T("canonHint"),
+      label: "Foundational Investing Canon", has: state.canon.length > 0, hint: shelfHint("canonHint"),
       left: T("canonHeroLeft"), right: T("canonHeroRight"),
     }) + `
       <section class="wrap sec" aria-labelledby="hCanonLib">
@@ -951,13 +971,13 @@
     document.title = `${tabName(t)} · Market Research Hub`;
     $("#view").innerHTML =
       shelfHeroHtml({
-        c: cvar(t.key), words: t.words, label: `${tabName(t)}: works this week`, has: items.length > 0, hint: T("topicHint"),
+        c: cvar(t.key), words: t.words, label: `${tabName(t)}: works this week`, has: items.length > 0, hint: shelfHint("topicHint"),
         left: `${esc(tabName(t))}<i class="ln"></i>${found} ${T("worksThisWeek")}`,
-        right: `<span class="en">${fmtRange(meta?.start, meta?.end)}</span><i class="ln"></i>${lh} ${T("longHorizonBadge")}`,
+        right: `<bdi>${fmtRange(meta?.start, meta?.end)}</bdi><i class="ln"></i>${lh} ${T("longHorizonBadge")}`,
       }) + `
       <div class="wrap after-hero">
         <div class="pulse-card" style="--c:${cvar(t.key)}">
-          <div class="pulse-head"><strong>${T("pulseTitle")}</strong><span class="en">${esc(state.week)} · ${fmtRange(meta?.start, meta?.end)}</span></div>
+          <div class="pulse-head"><strong>${T("pulseTitle")}</strong><span><bdi class="en">${esc(state.week)}</bdi> · <bdi>${fmtRange(meta?.start, meta?.end)}</bdi></span></div>
           <div class="pulse-scroll" id="pscroll">${marketPulseSvg(t, asc, selIdx, animate)}</div>
         </div>
 
@@ -1029,7 +1049,7 @@
       it.horizon === "long_term" ? T("longHorizonBadge") : "",
       it.empirical ? T("empiricalBadge") : "",
       (it.countries || []).slice(0, 3).map(c => `<span class="ctry">${flag(c)}${esc(cname(c))}</span>`).join(" "),
-      it.cited ? `Cited ${it.cited}` : "",
+      it.cited ? (LANG === "fa" ? `${it.cited} ارجاع` : `Cited ${it.cited}`) : "",
     ].filter(Boolean).join(" / ");
 
     const stat = it.canon ? (LANG === "fa" ? (it.stat_fa || it.stat_en) : it.stat_en) : "";
@@ -1038,15 +1058,17 @@
     const findTxt = it.canon
       ? (LANG === "fa" ? (it.finding_fa || it.finding_en) : it.finding_en)
       : (it.finding || "");
-    $("#sFinding").innerHTML = findTxt ? `<small>${T("keyFinding")}</small>${esc(trim(findTxt, 480))}` : "";
+    $("#sFinding").innerHTML = findTxt ? `<small>${T("keyFinding")}</small><span dir="auto">${esc(trim(findTxt, 480))}</span>` : "";
 
     const synTxt = it.canon
       ? ""
       : (LANG === "fa" && it.summary_fa ? it.summary_fa : (it.summary && it.summary !== it.finding ? it.summary : (!findTxt ? T("headlineOnly") : "")));
-    $("#sSyn").textContent = synTxt ? trim(synTxt, 520) : "";
+    const sSyn = $("#sSyn");
+    sSyn.setAttribute("dir", "auto");
+    sSyn.textContent = synTxt ? trim(synTxt, 520) : "";
 
     const takeTxt = it.canon ? (LANG === "fa" ? (it.takeaway_fa || it.takeaway_en) : it.takeaway_en) : "";
-    $("#sTakeaway").innerHTML = takeTxt ? `<small>${T("investorTakeaway")}</small>${esc(takeTxt)}` : "";
+    $("#sTakeaway").innerHTML = takeTxt ? `<small>${T("investorTakeaway")}</small><span dir="auto">${esc(takeTxt)}</span>` : "";
 
     $("#sCredit").textContent = (it.authors || []).length
       ? it.authors.slice(0, 5).join(", ") + (it.authors.length > 5 ? " et al." : "") + (it.venue && it.venue !== it.publisher ? ` · ${it.venue}` : "")
@@ -1166,7 +1188,7 @@
     return `<svg class="ld-spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.join(" ")}"/><circle cx="${(vals.length - 1) * st}" cy="${pts[pts.length - 1].split(",")[1]}" r="3.5"/></svg>`;
   };
   const chg = d => (d == null ? `<span class="ld-chg flat">${T("newBadge")}</span>` : `<span class="ld-chg ${d > 0 ? "up" : d < 0 ? "down" : "flat"}">${d > 0 ? "▲" : d < 0 ? "▼" : "•"} ${Math.abs(d)}%</span>`);
-  const ldRow = (it, extra = "") => `<li><button class="ld-row" data-lid="${it.id}" style="--c:${cvar(it.topic)}">${thumb(it)}<span class="ld-rt"><span class="ld-k">${esc(BY_KEY[it.topic] ? tabName(BY_KEY[it.topic]) : "")}${extra}</span><b>${esc(it.title)}</b>${it.finding ? `<i>${esc(trim(it.finding, 165))}</i>` : ""}<em>${pubTag(it.publisher)} · ${fmtDay(it.date)}${it.access === "headline" ? " · " + T("headlineOnlyTag") : ""}</em></span></button></li>`;
+  const ldRow = (it, extra = "") => `<li><button class="ld-row" data-lid="${it.id}" style="--c:${cvar(it.topic)}">${thumb(it)}<span class="ld-rt"><span class="ld-k">${esc(BY_KEY[it.topic] ? tabName(BY_KEY[it.topic]) : "")}${extra}</span><b>${esc(it.title)}</b>${it.finding ? `<i dir="auto">${esc(trim(it.finding, 165))}</i>` : ""}<em>${pubTag(it.publisher)} · ${fmtDay(it.date)}${it.access === "headline" ? " · " + T("headlineOnlyTag") : ""}</em></span></button></li>`;
 
   async function renderBrief() {
     stopShelf();
@@ -1202,7 +1224,7 @@
         <div class="ld-three">${L.picks.map(it => `<button class="ld-card" data-lid="${it.id}" style="--c:${cvar(it.topic)}">
           <span class="ld-cover">${coverSvg(it)}</span>
           <span class="ld-cb"><span class="ld-k">${esc(BY_KEY[it.topic] ? tabName(BY_KEY[it.topic]) : "")}</span><b>${esc(it.title)}</b>
-          <span class="ld-find">${esc(trim(it.finding || it.summary || "", 240))}</span>
+          <span class="ld-find" dir="auto">${esc(trim(it.finding || it.summary || "", 240))}</span>
           <em>${pubTag(it.publisher)} · ${esc(kindLabel(it.kind))} · ${READ[it.kind] || 10} ${T("minRead")}</em></span></button>`).join("")}</div>
       </section>
 
@@ -1266,30 +1288,36 @@
   const save = (blob, name) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); };
   const fileBase = L => `Market-Research-Hub-brief-${L.meta.week}`;
   const pillEn = it => BY_KEY[it.topic]?.name || "";
-  const sgn = d => (d == null ? "new" : `${d > 0 ? "+" : ""}${d}%`);
+  const pillLoc = it => (BY_KEY[it.topic] ? tabName(BY_KEY[it.topic]) : "");
+  const sgn = d => (d == null ? T("newBadge") : `${d > 0 ? "+" : ""}${d}%`);
 
   function exportXlsx(L) {
+    const fa = LANG === "fa";
     const col = i => { let s = ""; i++; while (i) { const m = (i - 1) % 26; s = String.fromCharCode(65 + m) + s; i = Math.floor((i - 1) / 26); } return s; };
-    const link = u => ({ f: `HYPERLINK("${String(u).replace(/"/g, '""')}","Open")` });
-    const sheet = (rows, widths) => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${rows.map((r, ri) => `<row r="${ri + 1}"${ri === 0 ? ' ht="22" customHeight="1"' : ""}>${r.map((v, ci) => {
+    const link = u => ({ f: `HYPERLINK("${String(u).replace(/"/g, '""')}","${fa ? "مشاهده" : "Open"}")` });
+    const sheet = (rows, widths) => `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"${fa ? ' rightToLeft="1"' : ""}><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${widths.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${rows.map((r, ri) => `<row r="${ri + 1}"${ri === 0 ? ' ht="22" customHeight="1"' : ""}>${r.map((v, ci) => {
       const ref = col(ci) + (ri + 1);
       if (ri === 0) return `<c r="${ref}" t="inlineStr" s="1"><is><t>${xe(v)}</t></is></c>`;
       if (v && typeof v === "object") return `<c r="${ref}" s="4"><f>${xe(v.f)}</f></c>`;
       if (typeof v === "number") return `<c r="${ref}" s="3"><v>${v}</v></c>`;
       return `<c r="${ref}" t="inlineStr" s="2"><is><t xml:space="preserve">${xe(v)}</t></is></c>`;
     }).join("")}</row>`).join("")}</sheetData></worksheet>`;
-    const work = (list, extra = []) => list.map(it => [pillEn(it), it.title, it.finding || it.summary || "", pub(it.publisher), KIND[it.kind]?.label || "", it.date || "", it.horizon === "long_term" ? "Long-Horizon" : "General", ...extra.map(f => f(it)), link(it.url)]);
-    const W = [22, 58, 68, 26, 12, 12, 14];
+    const hdr = fa
+      ? ["ستون پژوهشی", "عنوان", "یافته کلیدی", "ناشر", "نوع", "تاریخ", "افق زمانی"]
+      : ["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon"];
+    const lnkLbl = fa ? "لینک" : "Link";
+    const work = (list, extra = []) => list.map(it => [pillLoc(it), it.title, it.finding || it.summary || "", pub(it.publisher), kindLabel(it.kind) || "", it.date || "", it.horizon === "long_term" ? T("longHorizonBadge") : (fa ? "عمومی" : "General"), ...extra.map(f => f(it)), link(it.url)]);
+    const W = [24, 58, 68, 26, 14, 12, 16];
     const sheets = [
-      ["Summary", [["Item", "Value"], ["Week", `${fmtRange(L.meta.start, L.meta.end)} (${L.meta.week})`], ["Total new works", L.total],
-        ...L.pillars.flatMap(p => [[`${p.t.name}: works`, p.n], [`${p.t.name}: change vs last week`, sgn(p.d)]]),
-        ["Source", "Market Research Hub — automated equity & fundamental investing observatory"]], [36, 86]],
-      ["Three to read", [["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon", "Link"], ...work(L.picks)], [...W, 10]],
-      ["Rising themes", [["Theme", "Works this week", "4-week average", "Change"], ...L.themes.map(t => [t.labelEn, t.n, Math.round(t.avg * 10) / 10, sgn(t.d)])], [36, 16, 16, 12]],
-      ["Long-horizon", [["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon", "Link"], ...work(L.longH)], [...W, 10]],
-      ["Empirical evidence", [["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon", "Method", "Link"], ...work(L.evidence, [it => (it.methods || []).join(", ")])], [...W, 20, 10]],
-      ["Notable voices", [["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon", "Link"], ...work(L.bigs)], [...W, 10]],
-      ["All works", [["Pillar", "Title", "Key finding", "Publisher", "Type", "Date", "Horizon", "Countries", "Link"], ...work(L.items, [it => (it.countries || []).map(cname).join(", ")])], [...W, 16, 10]],
+      [fa ? "خلاصه هفته" : "Summary", [fa ? ["شاخص", "مقدار"] : ["Item", "Value"], [fa ? "هفته" : "Week", `${fmtRange(L.meta.start, L.meta.end)} (${L.meta.week})`], [fa ? "کل آثار تازه" : "Total new works", L.total],
+        ...L.pillars.flatMap(p => [[`${tabName(p.t)}: ${fa ? "تعداد آثار" : "works"}`, p.n], [`${tabName(p.t)}: ${fa ? "تغییر هفتگی" : "change vs last week"}`, sgn(p.d)]]),
+        [fa ? "منبع" : "Source", fa ? "Market Research Hub — رصدخانه خودکار پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی" : "Market Research Hub — automated equity & fundamental investing observatory"]], [38, 86]],
+      [fa ? "سه مطالعه برگزیده" : "Three to read", [[...hdr, lnkLbl], ...work(L.picks)], [...W, 10]],
+      [fa ? "موضوعات صعودی" : "Rising themes", [fa ? ["موضوع", "تعداد این هفته", "میانگین ۴ هفته", "تغییر"] : ["Theme", "Works this week", "4-week average", "Change"], ...L.themes.map(t => [fa ? t.label : t.labelEn, t.n, Math.round(t.avg * 10) / 10, sgn(t.d)])], [38, 16, 16, 12]],
+      [fa ? "افق بلندمدت" : "Long-horizon", [[...hdr, lnkLbl], ...work(L.longH)], [...W, 10]],
+      [fa ? "شواهد تجربی" : "Empirical evidence", [[...hdr, fa ? "روش پژوهش" : "Method", lnkLbl], ...work(L.evidence, [it => (it.methods || []).join(", ")])], [...W, 20, 10]],
+      [fa ? "صداهای شاخص" : "Notable voices", [[...hdr, lnkLbl], ...work(L.bigs)], [...W, 10]],
+      [fa ? "همه آثار" : "All works", [[...hdr, fa ? "کشورها" : "Countries", lnkLbl], ...work(L.items, [it => (it.countries || []).map(cname).join("، ")])], [...W, 18, 10]],
     ];
     const NS = "http://schemas.openxmlformats.org";
     const files = [
@@ -1300,29 +1328,29 @@
       { name: "xl/styles.xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="${NS}/spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><u/><sz val="11"/><color rgb="FF234B82"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0F2922"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment vertical="center"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment wrapText="1" vertical="top"/></xf><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0" applyAlignment="1"><alignment horizontal="left" vertical="top"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1" applyAlignment="1"><alignment vertical="top"/></xf></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>` },
       ...sheets.map(([, rows, w], i) => ({ name: `xl/worksheets/sheet${i + 1}.xml`, data: sheet(rows, w) })),
     ];
-    save(zip(files, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), fileBase(L) + ".xlsx");
+    save(zip(files, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), fileBase(L) + (fa ? "-fa" : "") + ".xlsx");
   }
 
   function exportDocx(L) {
-    const NS = "http://schemas.openxmlformats.org", rels = [];
-    const r = (t, o = {}) => `<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/>${o.b ? "<w:b/>" : ""}${o.i ? "<w:i/>" : ""}${o.color ? `<w:color w:val="${o.color}"/>` : ""}<w:sz w:val="${o.sz || 21}"/></w:rPr><w:t xml:space="preserve">${xe(t)}</w:t></w:r>`;
-    const p = (runs, o = {}) => `<w:p><w:pPr><w:spacing w:before="${o.before || 0}" w:after="${o.after ?? 100}"/>${o.border ? `<w:pBdr><w:bottom w:val="single" w:sz="8" w:space="4" w:color="${o.border}"/></w:pBdr>` : ""}${o.keep ? "<w:keepNext/>" : ""}</w:pPr>${runs}</w:p>`;
+    const fa = LANG === "fa", NS = "http://schemas.openxmlformats.org", rels = [];
+    const r = (t, o = {}) => `<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Tahoma"/>${o.b ? "<w:b/><w:bCs/>" : ""}${o.i ? "<w:i/>" : ""}${o.color ? `<w:color w:val="${o.color}"/>` : ""}<w:sz w:val="${o.sz || 21}"/><w:szCs w:val="${o.sz || 21}"/></w:rPr><w:t xml:space="preserve">${xe(t)}</w:t></w:r>`;
+    const p = (runs, o = {}) => `<w:p><w:pPr>${o.rtl ? "<w:bidi/>" : ""}<w:spacing w:before="${o.before || 0}" w:after="${o.after ?? 100}"/>${o.border ? `<w:pBdr><w:bottom w:val="single" w:sz="8" w:space="4" w:color="${o.border}"/></w:pBdr>` : ""}${o.keep ? "<w:keepNext/>" : ""}</w:pPr>${runs}</w:p>`;
     const a = (t, url) => { rels.push(url); return `<w:hyperlink r:id="rIdL${rels.length}" w:history="1">${r(t, { b: true, color: "0F2922", sz: 23 })}</w:hyperlink>`; };
     const hex6 = k => hex(k).replace("#", "").toUpperCase();
-    const h2 = t => p(r(t, { b: true, sz: 30, color: "0F2922" }), { before: 300, after: 110, border: "DDD6C8", keep: true });
-    const item = (it, extra = "") => p(r((pillEn(it) + extra).toUpperCase(), { b: true, sz: 16, color: hex6(it.topic) }), { before: 140, after: 20, keep: true })
+    const h2 = t => p(r(t, { b: true, sz: 28, color: "0F2922" }), { rtl: fa, before: 300, after: 110, border: "DDD6C8", keep: true });
+    const item = (it, extra = "") => p(r(fa ? (pillLoc(it) + extra) : (pillEn(it) + extra).toUpperCase(), { b: true, sz: 17, color: hex6(it.topic) }), { rtl: fa, before: 140, after: 20, keep: true })
       + p(a(it.title, it.url), { after: 40, keep: true })
       + ((it.finding || it.summary) ? p(r(trim(it.finding || it.summary, 380), { sz: 21 }), { after: 40 }) : "")
-      + p(r(`${pub(it.publisher)} · ${KIND[it.kind]?.label || ""} · ${fmtFull(it.date)}`, { color: "6E6A61", sz: 18 }), { after: 120 });
-    const tbl = (rows, widths) => `<w:tbl><w:tblPr><w:tblW w:w="5000" w:type="pct"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="0F2922"/><w:bottom w:val="single" w:sz="6" w:color="DDD6C8"/><w:insideH w:val="single" w:sz="4" w:color="DDD6C8"/></w:tblBorders></w:tblPr><w:tblGrid>${widths.map(w => `<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid>${rows.map((row, i) => `<w:tr>${row.map((c, j) => `<w:tc><w:tcPr><w:tcW w:w="${widths[j]}" w:type="dxa"/></w:tcPr><w:p><w:pPr><w:spacing w:after="0"/></w:pPr>${r(String(c), { b: i === 0, sz: i === 0 ? 18 : 20, color: i === 0 ? "6E6A61" : "151412" })}</w:p></w:tc>`).join("")}</w:tr>`).join("")}</w:tbl>`;
-    const body = p(r("MARKET RESEARCH HUB  ·  INVESTOR BRIEF", { b: true, sz: 17, color: "C84B31" }), { after: 60 })
-      + p(r(`Week of ${fmtRange(L.meta.start, L.meta.end)} ${ymd(L.meta.end)?.y || ""}`, { color: "6E6A61", sz: 20 }), { after: 220 })
-      + tbl([["Pillar", "Works this week", "Change vs last week"], ...L.pillars.map(x => [x.t.name, x.n, sgn(x.d)])], [4200, 2400, 2760])
-      + h2("Three to read") + L.picks.map(it => item(it)).join("")
-      + h2("Long-horizon signal") + L.longH.map(it => item(it)).join("")
-      + h2("Strongest empirical evidence") + L.evidence.map(it => item(it)).join("")
-      + h2("Notable voices") + L.bigs.map(it => item(it)).join("")
-      + p(r("Built automatically every Monday by Market Research Hub.", { i: true, color: "6E6A61", sz: 17 }), { before: 320 });
+      + p(r(`${pub(it.publisher)} · ${kindLabel(it.kind) || ""} · ${fmtFull(it.date)}`, { color: "6E6A61", sz: 18 }), { rtl: fa, after: 120 });
+    const tbl = (rows, widths) => `<w:tbl><w:tblPr>${fa ? "<w:bidiVisual/>" : ""}<w:tblW w:w="5000" w:type="pct"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="0F2922"/><w:bottom w:val="single" w:sz="6" w:color="DDD6C8"/><w:insideH w:val="single" w:sz="4" w:color="DDD6C8"/></w:tblBorders></w:tblPr><w:tblGrid>${widths.map(w => `<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid>${rows.map((row, i) => `<w:tr>${row.map((c, j) => `<w:tc><w:tcPr><w:tcW w:w="${widths[j]}" w:type="dxa"/></w:tcPr><w:p><w:pPr>${fa ? "<w:bidi/>" : ""}<w:spacing w:after="0"/></w:pPr>${r(String(c), { b: i === 0, sz: i === 0 ? 18 : 20, color: i === 0 ? "6E6A61" : "151412" })}</w:p></w:tc>`).join("")}</w:tr>`).join("")}</w:tbl>`;
+    const body = p(r(fa ? "MARKET RESEARCH HUB  ·  بریف سرمایه‌گذار" : "MARKET RESEARCH HUB  ·  INVESTOR BRIEF", { b: true, sz: 18, color: "C84B31" }), { rtl: fa, after: 60 })
+      + p(r(`${T("weekOf")} ${fmtRange(L.meta.start, L.meta.end)} ${ymd(L.meta.end)?.y || ""}`, { color: "6E6A61", sz: 20 }), { rtl: fa, after: 220 })
+      + tbl([fa ? ["ستون پژوهشی", "تعداد آثار این هفته", "تغییر نسبت به هفته قبل"] : ["Pillar", "Works this week", "Change vs last week"], ...L.pillars.map(x => [tabName(x.t), x.n, sgn(x.d)])], [4200, 2400, 2760])
+      + h2(T("threeToRead")) + L.picks.map(it => item(it)).join("")
+      + h2(T("longHorizonSec")) + L.longH.map(it => item(it)).join("")
+      + h2(T("strongestEvidence")) + L.evidence.map(it => item(it)).join("")
+      + h2(T("notableVoices")) + L.bigs.map(it => item(it)).join("")
+      + p(r(T("briefFoot"), { i: !fa, color: "6E6A61", sz: 17 }), { rtl: fa, before: 320 });
     const doc = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="${NS}/wordprocessingml/2006/main" xmlns:r="${NS}/officeDocument/2006/relationships"><w:body>${body}<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080"/></w:sectPr></w:body></w:document>`;
     const files = [
       { name: "[Content_Types].xml", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="${NS}/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>` },
@@ -1330,7 +1358,7 @@
       { name: "word/document.xml", data: doc },
       { name: "word/_rels/document.xml.rels", data: `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="${NS}/package/2006/relationships">${rels.map((u, i) => `<Relationship Id="rIdL${i + 1}" Type="${NS}/officeDocument/2006/relationships/hyperlink" Target="${xe(u)}" TargetMode="External"/>`).join("")}</Relationships>` },
     ];
-    save(zip(files, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), fileBase(L) + ".docx");
+    save(zip(files, "application/vnd.openxmlformats-officedocument.wordprocessingml.document"), fileBase(L) + (fa ? "-fa" : "") + ".docx");
   }
   function exportPdf(L) {
     const t = document.title; document.title = fileBase(L);
@@ -1425,7 +1453,7 @@
     layers.forEach((l, k) => { s += `<path class="rv-l" data-k="${k}" d="${curve(l.top)}${curveBack(l.bot)}Z" fill="${RIVER_C[k]}"><title>${esc(themeLbl(R.keys[k]))}</title></path>`; });
     layers.forEach((l, k) => {
       let bi = 0, bw = 0; l.top.forEach((y, i) => { const w = l.bot[i] - y; if (w > bw && i > 0 && i < n - 1) { bw = w; bi = i; } });
-      if (bw > 16) s += `<text class="rv-t" x="${X(bi)}" y="${((l.top[bi] + l.bot[bi]) / 2 + 4).toFixed(1)}" text-anchor="middle">${esc(THEME_LABELS[R.keys[k]]?.[0] || R.keys[k])}</text>`;
+      if (bw > 16) s += `<text class="rv-t" x="${X(bi)}" y="${((l.top[bi] + l.bot[bi]) / 2 + 4).toFixed(1)}" text-anchor="middle" direction="${LANG === "fa" ? "rtl" : "ltr"}">${esc(themeLbl(R.keys[k]))}</text>`;
     });
     R.wk.forEach((w, i) => { s += `<text class="rv-x" x="${X(i)}" y="${H - 4}" text-anchor="${i === 0 ? "start" : i === n - 1 ? "end" : "middle"}">${fmtDay(w.start)}</text>`; });
     return s + `<line class="rv-cur" x1="0" x2="0" y1="0" y2="${H - 20}" opacity="0"/></svg>`;
@@ -1461,14 +1489,14 @@
     const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 8);
     const paths = Object.entries(WORLD).map(([iso, c]) => {
       const n = cnt[iso] || 0, k = n ? (18 + 82 * Math.sqrt(n / mx)).toFixed(0) : 0;
-      return `<path d="${c.d}" data-iso="${iso}" class="${n ? "has" : ""}" style="${n ? `--k:${k}%` : ""}"><title>${esc(c.n)}${n ? `: ${n}` : ""}</title></path>`;
+      return `<path d="${c.d}" data-iso="${iso}" class="${n ? "has" : ""}" style="${n ? `--k:${k}%` : ""}"><title>${esc(cname(iso))}${n ? `: ${n}` : ""}</title></path>`;
     }).join("");
     box.innerHTML = `<div class="map-grid">
       <div class="map-stage"><svg class="map" viewBox="0 0 1000 487" role="img" aria-label="Global research map">${paths}</svg><div class="map-tip" hidden></div></div>
       <aside class="map-side">
         <div class="map-stat"><b>${Object.keys(cnt).length}</b><span>${T("countriesLbl")}</span></div>
         <div class="map-stat"><b>${lhN}</b><span>${T("longHorizonLbl")}</span></div>
-        <ol class="map-top">${top.map(([iso, n]) => `<li><button type="button" data-iso="${iso}"><span>${flag(iso)} ${esc(WORLD[iso]?.n || iso)}</span><i style="--w:${(n / top[0][1] * 100).toFixed(0)}%"></i><b>${n}</b></button></li>`).join("")}</ol>
+        <ol class="map-top">${top.map(([iso, n]) => `<li><button type="button" data-iso="${iso}"><span>${flag(iso)} ${esc(cname(iso))}</span><i style="--w:${(n / top[0][1] * 100).toFixed(0)}%"></i><b>${n}</b></button></li>`).join("")}</ol>
         <p class="map-note">${T("noCountryNote", none, list.length)}</p>
       </aside></div>
       <div class="map-list" id="mapList"></div>`;
@@ -1477,13 +1505,13 @@
       if (!iso) return;
       box.querySelectorAll("[data-iso]").forEach(p => p.classList.toggle("sel", p.dataset.iso === iso));
       const items = list.filter(i => (i.countries || []).includes(iso)).sort((a, b) => b.score - a.score).slice(0, 6);
-      $("#mapList", box).innerHTML = `<p class="map-lh">${flag(iso)} ${esc(WORLD[iso]?.n || iso)}<span>${cnt[iso] || 0}</span></p><ul class="ld-list ld-cols">${items.map(it => ldRow(it)).join("")}</ul>`;
+      $("#mapList", box).innerHTML = `<p class="map-lh">${flag(iso)} ${esc(cname(iso))}<span>${cnt[iso] || 0}</span></p><ul class="ld-list ld-cols">${items.map(it => ldRow(it)).join("")}</ul>`;
     };
     box.addEventListener("click", e => { const el = e.target.closest("[data-iso]"); if (el) pick(el.dataset.iso); });
     $("svg", box).addEventListener("pointermove", e => {
       const p = e.target.closest("path[data-iso]"); if (!p) { tip.hidden = true; return; }
       const iso = p.dataset.iso, r = stage.getBoundingClientRect();
-      tip.hidden = false; tip.innerHTML = `${flag(iso)} ${esc(WORLD[iso].n)} <b>${cnt[iso] || 0}</b>`;
+      tip.hidden = false; tip.innerHTML = `${flag(iso)} ${esc(cname(iso))} <b>${cnt[iso] || 0}</b>`;
       tip.style.left = (e.clientX - r.left + 14) + "px"; tip.style.top = (e.clientY - r.top + 14) + "px";
     });
     $("svg", box).addEventListener("pointerleave", () => { tip.hidden = true; });
@@ -1501,7 +1529,11 @@
     return lines;
   }
   async function shareCanvas(it) {
-    await Promise.all(["700 44px 'Inter Tight'", "600 20px 'Inter Tight'", "italic 400 30px Newsreader"].map(f => document.fonts.load(f).catch(() => {})));
+    const fa = LANG === "fa";
+    await Promise.all([
+      "700 44px 'Inter Tight'", "600 20px 'Inter Tight'", "italic 400 30px Newsreader",
+      "700 26px 'Vazirmatn'", "400 26px 'Vazirmatn'",
+    ].map(f => document.fonts.load(f).catch(() => {})));
     const b = brandOf(it.publisher);
     let inner = coverInner(it);
     for (const u of [b.i, b.m].filter(Boolean)) { try { inner = inner.split(`href="${u}"`).join(`href="${await toDataUrl(u)}"`); } catch (e) {} }
@@ -1514,23 +1546,51 @@
     x.fillStyle = col; x.fillRect(0, 0, 1200, 10);
     const logo = await loadImg("data:image/svg+xml;charset=utf-8," + encodeURIComponent($(".logo").outerHTML.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"')));
     x.drawImage(logo, 70, 58, 46, 46);
-    x.fillStyle = "#151412"; x.font = "800 26px 'Inter Tight'"; x.textBaseline = "middle"; x.fillText("Market Research", 130, 82);
+    x.direction = "ltr"; x.textAlign = "left"; x.fillStyle = "#151412"; x.font = "800 26px 'Inter Tight'"; x.textBaseline = "middle"; x.fillText("Market Research", 130, 82);
     const wW = x.measureText("Market Research ").width; x.fillStyle = "#C84B31"; x.font = "italic 400 29px Newsreader"; x.fillText("Hub", 130 + wW, 82);
-    x.textAlign = "right"; x.fillStyle = col; x.font = "700 20px 'Inter Tight'"; x.fillText(BY_KEY[it.topic]?.name || "", 1130, 82); x.textAlign = "left";
+    x.textAlign = "right"; x.direction = fa ? "rtl" : "ltr"; x.fillStyle = col;
+    x.font = fa ? "700 21px 'Vazirmatn'" : "700 20px 'Inter Tight'";
+    x.fillText(BY_KEY[it.topic] ? tabName(BY_KEY[it.topic]) : "", 1130, 82);
+    x.direction = "ltr"; x.textAlign = "left";
     x.save(); x.shadowColor = "rgba(20,16,10,.35)"; x.shadowBlur = 50; x.shadowOffsetY = 24; x.drawImage(cover, 70, 160, 440, 835); x.restore();
-    const X0 = 570, MW = 560; let y = 190;
-    x.textBaseline = "alphabetic"; x.fillStyle = "#151412"; x.font = "700 42px 'Inter Tight'";
-    wrapCanvas(x, it.title, MW, 5).forEach(l => { x.fillText(l, X0, y + 40); y += 52; });
-    y += 28; x.fillStyle = col; x.fillRect(X0, y, 56, 4); y += 46;
-    const q = it.canon ? (it.stat_en + " " + it.finding_en) : (it.finding || it.summary || "");
-    if (q) { x.fillStyle = "#2A2825"; x.font = "italic 400 29px Newsreader"; wrapCanvas(x, `“${q}”`, MW, 8).forEach(l => { x.fillText(l, X0, y); y += 42; }); }
+    const X0 = 570, X1 = 1130, MW = 560; let y = 185;
+    x.textBaseline = "alphabetic"; x.fillStyle = "#151412";
+    const hasFaTitle = fa && it.title_fa;
+    x.font = hasFaTitle ? "700 36px 'Inter Tight'" : "700 42px 'Inter Tight'";
+    wrapCanvas(x, it.title, MW, hasFaTitle ? 4 : 5).forEach(l => { x.fillText(l, X0, y + 38); y += hasFaTitle ? 45 : 52; });
+    if (hasFaTitle) {
+      y += 12; x.direction = "rtl"; x.textAlign = "right"; x.fillStyle = col; x.font = "700 24px 'Vazirmatn'";
+      wrapCanvas(x, it.title_fa, MW, 2).forEach(l => { x.fillText(l, X1, y + 26); y += 36; });
+      x.direction = "ltr"; x.textAlign = "left";
+    }
+    y += 22; x.fillStyle = col; x.fillRect(fa && ((it.canon && (it.stat_fa || it.finding_fa)) || it.summary_fa) ? X1 - 56 : X0, y, 56, 4); y += 44;
+    const faQuote = fa && (it.canon ? (it.stat_fa || it.finding_fa) : it.summary_fa);
+    const q = faQuote
+      ? (it.canon ? [it.stat_fa, it.finding_fa].filter(Boolean).join(" — ") : it.summary_fa)
+      : (it.canon ? (it.stat_en + " " + it.finding_en) : (it.finding || it.summary || ""));
+    if (q) {
+      if (faQuote) {
+        x.direction = "rtl"; x.textAlign = "right"; x.fillStyle = "#2A2825"; x.font = "500 24px 'Vazirmatn'";
+        wrapCanvas(x, `«${q}»`, MW, 7).forEach(l => { x.fillText(l, X1, y); y += 40; });
+        x.direction = "ltr"; x.textAlign = "left";
+      } else {
+        x.fillStyle = "#2A2825"; x.font = "italic 400 29px Newsreader";
+        wrapCanvas(x, `“${q}”`, MW, 8).forEach(l => { x.fillText(l, X0, y); y += 42; });
+      }
+    }
     const pubY = 960;
     if (b.i) { try { const pl = await loadImg(await toDataUrl(b.i)); x.fillStyle = "#fff"; x.beginPath(); x.roundRect(X0, pubY - 30, 44, 44, 10); x.fill(); x.drawImage(pl, X0 + 6, pubY - 24, 32, 32); } catch (e) {} }
     x.fillStyle = "#151412"; x.font = "600 22px 'Inter Tight'"; x.fillText(trim(pub(it.publisher), 38), X0 + (b.i ? 60 : 0), pubY);
-    x.fillStyle = "#6E6A61"; x.font = "400 19px 'Inter Tight'"; x.fillText(`${it.canon ? "Foundational Canon" : (KIND[it.kind]?.label || "Work")} · ${it.canon ? it.year : fmtFull(it.date)}`, X0 + (b.i ? 60 : 0), pubY + 28);
+    x.fillStyle = "#6E6A61"; x.font = fa ? "500 18px 'Vazirmatn'" : "400 19px 'Inter Tight'";
+    x.direction = fa ? "rtl" : "ltr";
+    if (fa) { x.textAlign = "left"; }
+    x.fillText(`${it.canon ? T("canonBadge") : (kindLabel(it.kind) || "Work")} · ${it.canon ? it.year : fmtFull(it.date)}`, X0 + (b.i ? 60 : 0), pubY + 28);
+    x.direction = "ltr"; x.textAlign = "left";
     x.fillStyle = "#0F2922"; x.fillRect(0, 1080, 1200, 120);
     x.fillStyle = "#FAF8F3"; x.font = "700 23px 'Inter Tight'"; x.fillText("market-research-hub", 70, 1148);
-    x.textAlign = "right"; x.fillStyle = "#E6A441"; x.font = "italic 400 24px Newsreader"; x.fillText("Long-term equity research & The Canon, every Monday", 1130, 1148);
+    x.textAlign = "right"; x.direction = fa ? "rtl" : "ltr"; x.fillStyle = "#E6A441";
+    x.font = fa ? "600 22px 'Vazirmatn'" : "italic 400 24px Newsreader";
+    x.fillText(T("shareTagline"), 1130, 1148);
     return c;
   }
   async function openShare(it) {
@@ -1655,8 +1715,7 @@
 
   function renderFooter() {
     if (!state.index) return;
-    const d = ymd(state.index.generated);
-    $("#generated").textContent = d ? `${T("updated")} ${d.d} ${MON[d.m]} ${d.y}` : "";
+    $("#generated").textContent = state.index.generated ? `${T("updated")} ${fmtFull(state.index.generated)}` : "";
     const list = v => (Array.isArray(v) ? v : Object.keys(v || {}));
     const src = state.index.sources || {};
     $("#sources").innerHTML = [...list(src.databases), ...list(src.publishers)].map(s => `<span>${LOGOS[s] ? plogo(s) : ""}${esc(pub(s))}</span>`).join("");
