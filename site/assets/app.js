@@ -1,7 +1,7 @@
 /* Market Research Hub — Vanilla JS, zero dependencies, bilingual EN (default) / FA.
    Editorial equity & fundamental investing observatory with 3D archive shelf,
    generative 3-ink screen-print covers, The Canon, Market Pulse, Theme River,
-   World Map, Investor Brief (XLSX/DOCX/PDF), 30s Reel, and 1200x1200 Share Card. */
+   World Map, Investor Brief (XLSX/DOCX/PDF), 45s Reel, and 1200x1200 Share Card. */
 (() => {
   "use strict";
 
@@ -18,7 +18,7 @@
       tipCanonTitle: "The Canon · Timeless Foundations",
       tipCanonDesc: "16 landmark papers & investor letters—Bessembinder, Bubbles for Fama, Buffett, Lynch, Mauboussin & Marks—distilled into key stats and mental models.",
       tipBriefTitle: "Investor Brief · 2-Min Weekly Digest",
-      tipBriefDesc: "Weekly KPI trends, Three to Read, Rising Themes, Long-Horizon Evidence, 30-second Reel, and one-click Excel, Word & PDF exports.",
+      tipBriefDesc: "Weekly KPI trends, Three to Read, Rising Themes, Long-Horizon Evidence, 45-second Reel, and one-click Excel, Word & PDF exports.",
       introKicker: "What is this?",
       introCopy: "Every Monday, <strong>Market Research Hub</strong> gathers fresh equity research alongside timeless classics (<em>Bessembinder, Bubbles for Fama, Buffett, Lynch</em>) to support calmer, long-term investing decisions.",
       introClose: "Got it",
@@ -96,7 +96,7 @@
       canonAnchorSec: "Canon companions for this week",
       canonAnchorSub: "Foundational papers that frame this week's leading research debates.",
       briefFoot: "Built automatically every Monday from public academic databases and institutional feeds. Findings are grounded strictly in the source text.",
-      reelBtn: "This week in 30 seconds",
+      reelBtn: "This week in 45 seconds",
       reelSub1: "new equity & investing research works tracked this week",
       reelWhere: "Where research landed across the four pillars",
       reelThree: "Three to read this week",
@@ -134,7 +134,7 @@
       tipCanonTitle: "آثار ماندگار (The Canon)",
       tipCanonDesc: "۱۶ پژوهش و نامه بنیادین—از Bessembinder و Bubbles for Fama تا Buffett، Peter Lynch، Mauboussin و Howard Marks—با آمار کلیدی و چارچوب فکری سرمایه‌گذاری بلندمدت.",
       tipBriefTitle: "بریف سرمایه‌گذار (Investor Brief)",
-      tipBriefDesc: "خلاصه ۲ دقیقه‌ای هفته: شاخص‌های کلیدی، ۳ مطالعه برگزیده، موضوعات در حال صعود، شواهد بلندمدت، ریل ۳۰ ثانیه‌ای و خروجی Excel، Word و PDF.",
+      tipBriefDesc: "خلاصه ۲ دقیقه‌ای هفته: شاخص‌های کلیدی، ۳ مطالعه برگزیده، موضوعات در حال صعود، شواهد بلندمدت، ریل ۴۵ ثانیه‌ای و خروجی Excel، Word و PDF.",
       introKicker: "این پلتفرم چیست؟",
       introCopy: "<strong>Market Research Hub</strong> هر دوشنبه تازه‌ترین پژوهش‌های بازار سهام را کنار آثار ماندگار <em>(Bessembinder, Bubbles for Fama, Buffett, Peter Lynch)</em> جمع می‌کند تا چارچوب فکری قوی‌تری برای سرمایه‌گذاری بلندمدت بسازید.",
       introClose: "متوجه شدم",
@@ -212,7 +212,7 @@
       canonAnchorSec: "همراهان ماندگار این هفته از قفسه Canon",
       canonAnchorSub: "پژوهش‌های کلاسیکی که بهترین لنز را برای تحلیل بحث‌های این هفته می‌دهند.",
       briefFoot: "به‌طور خودکار هر دوشنبه از پایگاه‌های علمی و فیدهای تحلیلی ساخته می‌شود. یافته‌ها مستقیماً مبتنی بر متن منابع اصلی هستند.",
-      reelBtn: "خلاصه این هفته در ۳۰ ثانیه",
+      reelBtn: "خلاصه این هفته در ۴۵ ثانیه",
       reelSub1: "پژوهش و یادداشت تازه در حوزه بازار سهام و سرمایه‌گذاری بنیادی",
       reelWhere: "توزیع پژوهش‌ها در چهار ستون اصلی",
       reelThree: "سه مطالعه برگزیده این هفته",
@@ -1369,8 +1369,107 @@
     setTimeout(() => { document.title = t; }, 500);
   }
 
-  // ---------- 30-Second Animated Reel ----------
-  const REEL_MS = 6000;
+  // ---------- 45-Second Animated Reel + Subtle Ambient Music ----------
+  const REEL_MS = 9000;
+  function createReelAudio() {
+    let muted = false;
+    try { muted = localStorage.getItem("mrh-reel-muted") === "1"; } catch (e) {}
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return { muted: true, toggleMute: () => true, setPaused: () => {}, stop: () => {} };
+    let ctx, master, lpf, timer = 0, closed = false, paused = false, step = 0;
+    const TARGET_VOL = 0.16;
+    const CHORDS = [
+      { pad: [174.61, 261.63, 329.63, 392.00], arp: [523.25, 659.25, 783.99, 698.46, 523.25, 659.25] }, // Fmaj9
+      { pad: [146.83, 220.00, 261.63, 329.63], arp: [440.00, 523.25, 659.25, 587.33, 440.00, 523.25] }, // Dm9
+      { pad: [116.54, 233.08, 293.66, 349.23], arp: [466.16, 587.33, 698.46, 523.25, 466.16, 587.33] }, // Bbmaj7
+      { pad: [130.81, 261.63, 329.63, 392.00], arp: [523.25, 587.33, 659.25, 783.99, 659.25, 523.25] }, // C6/9
+    ];
+    try {
+      ctx = new AC();
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+      const comp = ctx.createDynamicsCompressor();
+      comp.connect(ctx.destination);
+      master = ctx.createGain();
+      master.gain.setValueAtTime(0.0001, ctx.currentTime);
+      master.gain.linearRampToValueAtTime(muted ? 0.0001 : TARGET_VOL, ctx.currentTime + 1.2);
+      master.connect(comp);
+
+      lpf = ctx.createBiquadFilter();
+      lpf.type = "lowpass"; lpf.frequency.value = 1150; lpf.Q.value = 0.65;
+      lpf.connect(master);
+
+      // Gentle ambient room delay
+      const dly = ctx.createDelay(1.0); dly.delayTime.value = 0.375;
+      const dFilt = ctx.createBiquadFilter(); dFilt.type = "lowpass"; dFilt.frequency.value = 820;
+      const fb = ctx.createGain(); fb.gain.value = 0.28;
+      const wet = ctx.createGain(); wet.gain.value = 0.34;
+      lpf.connect(dly); dly.connect(dFilt); dFilt.connect(fb); fb.connect(dly); dFilt.connect(wet); wet.connect(master);
+
+      const note = (freq, dur, vol, atk = 0.04, type = "sine") => {
+        if (!ctx || closed) return;
+        const now = ctx.currentTime;
+        const o = ctx.createOscillator(), g = ctx.createGain();
+        o.type = type; o.frequency.setValueAtTime(freq, now);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.linearRampToValueAtTime(vol, now + atk);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+        o.connect(g); g.connect(lpf);
+        o.start(now); o.stop(now + dur + 0.05);
+      };
+
+      const tick = () => {
+        if (closed || paused || muted) return;
+        if (ctx.state === "suspended") ctx.resume().catch(() => {});
+        const c = CHORDS[Math.floor(step / 6) % CHORDS.length];
+        const beat = step % 6;
+        if (beat === 0) {
+          c.pad.forEach((f, i) => note(f, 4.6, i === 0 ? 0.055 : 0.032, 0.9, "sine"));
+        }
+        if (beat !== 4) {
+          const f = c.arp[beat];
+          note(f, 2.2, 0.052, 0.035, "sine");
+          note(f * 0.5, 1.8, 0.016, 0.05, "triangle");
+        }
+        step++;
+      };
+      tick();
+      timer = setInterval(tick, 750);
+    } catch (e) {
+      return { muted: true, toggleMute: () => true, setPaused: () => {}, stop: () => {} };
+    }
+    const ramp = v => {
+      if (!ctx || !master || closed) return;
+      const now = ctx.currentTime;
+      master.gain.cancelScheduledValues(now);
+      master.gain.setValueAtTime(Math.max(0.0001, master.gain.value), now);
+      master.gain.linearRampToValueAtTime(Math.max(0.0001, v), now + 0.35);
+    };
+    return {
+      get muted() { return muted; },
+      toggleMute() {
+        muted = !muted;
+        try { localStorage.setItem("mrh-reel-muted", muted ? "1" : "0"); } catch (e) {}
+        if (muted) ramp(0.0001);
+        else { if (ctx.state === "suspended") ctx.resume().catch(() => {}); if (!paused) ramp(TARGET_VOL); }
+        return muted;
+      },
+      setPaused(p) {
+        paused = p;
+        if (muted) return;
+        if (p) ramp(0.0001);
+        else { if (ctx.state === "suspended") ctx.resume().catch(() => {}); ramp(TARGET_VOL); }
+      },
+      stop() {
+        if (closed) return;
+        closed = true;
+        clearInterval(timer);
+        if (ctx && master) {
+          ramp(0.0001);
+          setTimeout(() => { try { ctx.close(); } catch (e) {} }, 380);
+        }
+      },
+    };
+  }
   const countUp = root => root.querySelectorAll("[data-count]").forEach(el => {
     const to = +el.dataset.count, t0 = performance.now(), dur = reduced ? 0 : 1200;
     const tick = now => { const k = dur ? Math.min(1, (now - t0) / dur) : 1; el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
@@ -1399,12 +1498,13 @@
         ${lh[0] ? v(`<p class="reel-q">${esc(trim(lh[0].title, 120))}</p>`, 650) : ""}
         ${v(`<p class="reel-end">${$(".logo").outerHTML}<span>${T("reelEnd")}</span></p>`, 980)}`,
     ];
+    const audio = createReelAudio();
     const el = document.createElement("div");
-    el.className = "reel"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
+    el.className = "reel" + (audio.muted ? " muted" : ""); el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true");
     el.innerHTML = `<div class="reel-prog">${scenes.map(() => "<i><b></b></i>").join("")}</div>
       <button class="reel-x lbl box" type="button">${T("close")}</button>
       <div class="reel-stage" aria-live="polite"></div>
-      <div class="reel-nav"><button type="button" data-r="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" data-r="p" aria-label="Pause"><svg viewBox="0 0 24 24" class="pa"><path d="M8 5v14M16 5v14"/></svg><svg viewBox="0 0 24 24" class="pl"><path d="M7 4.5v15l12-7.5z"/></svg></button><button type="button" data-r="1" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div>`;
+      <div class="reel-nav"><button type="button" data-r="-1" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" data-r="p" aria-label="Pause"><svg viewBox="0 0 24 24" class="pa"><path d="M8 5v14M16 5v14"/></svg><svg viewBox="0 0 24 24" class="pl"><path d="M7 4.5v15l12-7.5z"/></svg></button><button type="button" data-r="1" aria-label="Next"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button><button type="button" data-r="m" aria-label="Mute or unmute music" aria-pressed="${audio.muted}"><svg viewBox="0 0 24 24" class="vo"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg><svg viewBox="0 0 24 24" class="vm"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/><path d="M21 9l-6 6M15 9l6 6"/></svg></button></div>`;
     document.body.appendChild(el); document.body.classList.add("reel-open");
     const bars = [...el.querySelectorAll(".reel-prog b")], stage = $(".reel-stage", el), last = document.activeElement;
     let idx = 0, t = 0, paused = false, prev = performance.now(), raf;
@@ -1413,23 +1513,27 @@
       stage.innerHTML = `<div class="reel-scene">${scenes[idx]()}</div>`; countUp(stage);
       bars.forEach((b, k) => { b.style.width = k < idx ? "100%" : "0%"; });
     };
-    const close = () => { cancelAnimationFrame(raf); el.classList.add("out"); document.removeEventListener("keydown", key, true); setTimeout(() => { el.remove(); document.body.classList.remove("reel-open"); if (last) last.focus(); }, 280); };
+    const close = () => { cancelAnimationFrame(raf); audio.stop(); el.classList.add("out"); document.removeEventListener("keydown", key, true); setTimeout(() => { el.remove(); document.body.classList.remove("reel-open"); if (last) last.focus(); }, 280); };
+    const pause = p => { paused = p; el.classList.toggle("paused", p); audio.setPaused(p); };
     const loop = now => {
-      if (!paused) { t += now - prev; bars[idx].style.width = Math.min(100, t / REEL_MS * 100) + "%"; if (t >= REEL_MS) { if (idx === scenes.length - 1) { paused = true; el.classList.add("paused", "done"); } else show(idx + 1); } }
+      if (!paused) { t += now - prev; bars[idx].style.width = Math.min(100, t / REEL_MS * 100) + "%"; if (t >= REEL_MS) { if (idx === scenes.length - 1) { el.classList.add("done"); pause(true); } else show(idx + 1); } }
       prev = now; raf = requestAnimationFrame(loop);
     };
-    const pause = p => { paused = p; el.classList.toggle("paused", p); };
+    const muteBtn = $('[data-r="m"]', el);
+    const toggleMute = () => { const m = audio.toggleMute(); el.classList.toggle("muted", m); muteBtn?.setAttribute("aria-pressed", String(m)); };
     const key = e => {
       if (e.key === "Escape") { e.stopPropagation(); close(); }
       else if (e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); show(idx + 1); }
       else if (e.key === "ArrowLeft") { e.preventDefault(); e.stopPropagation(); show(idx - 1); }
       else if (e.key === " ") { e.preventDefault(); e.stopPropagation(); pause(!paused); }
+      else if (e.key === "m" || e.key === "M") { e.preventDefault(); e.stopPropagation(); toggleMute(); }
     };
     document.addEventListener("keydown", key, true);
     el.addEventListener("click", e => {
       if (e.target.closest(".reel-x")) return close();
       const r = e.target.closest("[data-r]"); if (!r) return;
       if (r.dataset.r === "p") { if (el.classList.contains("done")) { el.classList.remove("done"); show(0); pause(false); } else pause(!paused); }
+      else if (r.dataset.r === "m") toggleMute();
       else show(idx + +r.dataset.r);
     });
     show(0); raf = requestAnimationFrame(loop); $(".reel-x", el).focus();
