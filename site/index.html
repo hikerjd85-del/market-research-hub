@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script>try{var t=localStorage.getItem("mrh-theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";var l=localStorage.getItem("mrh-lang");l=l==="fa"?"fa":"en";document.documentElement.lang=l;document.documentElement.dir=l==="fa"?"rtl":"ltr";}catch(e){document.documentElement.dataset.theme="light";document.documentElement.lang="en";document.documentElement.dir="ltr";}</script>
+<script>try{var t=localStorage.getItem("mrh-theme");document.documentElement.dataset.theme=t==="dark"?"dark":"light";var l=localStorage.getItem("mrh-lang");l=l==="fa"?"fa":"en";document.documentElement.lang=l;document.documentElement.dir=l==="fa"?"rtl":"ltr";if(localStorage.getItem("mrh-intro-dismissed")==="1")document.documentElement.dataset.intro="off";}catch(e){document.documentElement.dataset.theme="light";document.documentElement.lang="en";document.documentElement.dir="ltr";}</script>
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="alternate" type="application/json" href="data/index.json" title="Market Research Hub index">
 </head>
@@ -52,6 +52,14 @@
     </div>
   </div>
 </header>
+
+<aside class="intro-strip" id="introStrip" role="region" aria-label="About Market Research Hub">
+  <div class="intro-in">
+    <span class="intro-kicker"><i class="intro-dot" aria-hidden="true"></i><span data-i18n="introKicker">What is this?</span></span>
+    <p class="intro-copy" id="introCopy"></p>
+    <button class="intro-close" id="introClose" type="button"><span data-i18n="introClose">Got it</span><span aria-hidden="true">✕</span></button>
+  </div>
+</aside>
 
 <main id="view" tabindex="-1"></main>
 

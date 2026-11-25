@@ -19,6 +19,9 @@
       tipCanonDesc: "16 landmark papers & investor letters—Bessembinder, Bubbles for Fama, Buffett, Lynch, Mauboussin & Marks—distilled into key stats and mental models.",
       tipBriefTitle: "Investor Brief · 2-Min Weekly Digest",
       tipBriefDesc: "Weekly KPI trends, Three to Read, Rising Themes, Long-Horizon Evidence, 30-second Reel, and one-click Excel, Word & PDF exports.",
+      introKicker: "What is this?",
+      introCopy: "Every Monday, <strong>Market Research Hub</strong> gathers fresh equity research alongside timeless classics (<em>Bessembinder, Bubbles for Fama, Buffett, Lynch</em>) to support calmer, long-term investing decisions.",
+      introClose: "Got it",
       close: "Close",
       readAt: "Read at",
       readAtSource: "Read at source",
@@ -131,6 +134,9 @@
       tipCanonDesc: "۱۶ پژوهش و نامه بنیادین—از Bessembinder و Bubbles for Fama تا Buffett، Peter Lynch، Mauboussin و Howard Marks—با آمار کلیدی و چارچوب فکری سرمایه‌گذاری بلندمدت.",
       tipBriefTitle: "بریف سرمایه‌گذار (Investor Brief)",
       tipBriefDesc: "خلاصه ۲ دقیقه‌ای هفته: شاخص‌های کلیدی، ۳ مطالعه برگزیده، موضوعات در حال صعود، شواهد بلندمدت، ریل ۳۰ ثانیه‌ای و خروجی Excel، Word و PDF.",
+      introKicker: "این پلتفرم چیست؟",
+      introCopy: "<strong>Market Research Hub</strong> هر دوشنبه تازه‌ترین پژوهش‌های بازار سهام را کنار آثار ماندگار (<em>Bessembinder، Bubbles for Fama، Buffett، Peter Lynch</em>) جمع می‌کند تا چارچوب فکری قوی‌تری برای سرمایه‌گذاری بلندمدت بسازید.",
+      introClose: "متوجه شدم",
       close: "بستن",
       readAt: "مطالعه در",
       readAtSource: "مطالعه در منبع اصلی",
@@ -518,6 +524,8 @@
     document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T(el.dataset.i18n); });
     $("#sClose").textContent = T("close");
     $("#sShare").textContent = T("shareBtn");
+    const introCopy = $("#introCopy");
+    if (introCopy) introCopy.innerHTML = T("introCopy");
     $("#footLine").innerHTML = T("footLine");
     $("#footSrcSum").textContent = T("sources");
     renderTabs();
@@ -1603,6 +1611,20 @@
       await route(false, true);
       if (wasOpen) openSheet(wasOpen, null);
     });
+
+    const intro = $("#introStrip"), introBtn = $("#introClose");
+    if (intro && introBtn) {
+      if (document.documentElement.dataset.intro === "off") intro.hidden = true;
+      introBtn.addEventListener("click", () => {
+        try { localStorage.setItem("mrh-intro-dismissed", "1"); } catch (e) {}
+        intro.classList.add("closing");
+        setTimeout(() => {
+          intro.hidden = true;
+          document.documentElement.dataset.intro = "off";
+          window.dispatchEvent(new Event("resize"));
+        }, 280);
+      });
+    }
   }
 
   async function pickWeek(w) {
