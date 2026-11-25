@@ -135,7 +135,7 @@
       tipBriefTitle: "بریف سرمایه‌گذار (Investor Brief)",
       tipBriefDesc: "خلاصه ۲ دقیقه‌ای هفته: شاخص‌های کلیدی، ۳ مطالعه برگزیده، موضوعات در حال صعود، شواهد بلندمدت، ریل ۳۰ ثانیه‌ای و خروجی Excel، Word و PDF.",
       introKicker: "این پلتفرم چیست؟",
-      introCopy: "<strong>Market Research Hub</strong> هر دوشنبه تازه‌ترین پژوهش‌های بازار سهام را کنار آثار ماندگار (<em>Bessembinder، Bubbles for Fama، Buffett، Peter Lynch</em>) جمع می‌کند تا چارچوب فکری قوی‌تری برای سرمایه‌گذاری بلندمدت بسازید.",
+      introCopy: "<strong>Market Research Hub</strong> هر دوشنبه تازه‌ترین پژوهش‌های بازار سهام را کنار آثار ماندگار <em>(Bessembinder, Bubbles for Fama, Buffett, Peter Lynch)</em> جمع می‌کند تا چارچوب فکری قوی‌تری برای سرمایه‌گذاری بلندمدت بسازید.",
       introClose: "متوجه شدم",
       close: "بستن",
       readAt: "مطالعه در",
