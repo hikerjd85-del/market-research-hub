@@ -1,0 +1,844 @@
+{
+ "generated": "2026-11-25T15:26:56Z",
+ "issues": [
+  {
+   "week": "2026-W47",
+   "number": 10,
+   "start": "2026-11-16",
+   "end": "2026-11-22",
+   "count": 39,
+   "found": {
+    "winners": 14,
+    "valuation": 9,
+    "moats": 6,
+    "bubbles": 10
+   },
+   "topics": {
+    "bubbles": 10,
+    "moats": 6,
+    "winners": 14,
+    "valuation": 9
+   },
+   "kinds": {
+    "insight": 22,
+    "paper": 10,
+    "preprint": 2,
+    "report": 5
+   },
+   "horizons": {
+    "long_term": 13,
+    "general": 26
+   },
+   "empirical": 14,
+   "countries": {
+    "GB": 6,
+    "EC": 1,
+    "NG": 1,
+    "US": 21,
+    "FR": 1,
+    "TN": 1,
+    "UZ": 1,
+    "ID": 1
+   },
+   "methods": {
+    "Event study": 2,
+    "Long-horizon empirical": 3,
+    "Behavioral / Experimental": 7,
+    "Simulation": 2,
+    "Valuation model": 7,
+    "Meta-analysis / Review": 1,
+    "Factor / Cross-sectional": 1,
+    "AI & Text mining": 1,
+    "Econometric": 1
+   },
+   "publishers": {
+    "Klement on Investing": 6,
+    "A Wealth of Common Sense": 6,
+    "Morningstar": 4,
+    "Multidisciplinary Digital Publishing Institute": 3,
+    "Musings on Markets (Damodaran)": 2,
+    "S&P Dow Jones Indices": 2,
+    "Novel Investor": 2,
+    "International Journal of Modern Science and Research Technology": 1,
+    "arXiv (q-fin)": 1,
+    "CRC Press": 1,
+    "Emerald Publishing Limited": 1,
+    "Academic Journal of Digital Economics and Stability": 1,
+    "European Organization for Nuclear Research": 1,
+    "Alpha Architect": 1,
+    "Counterpoint Global": 1,
+    "Goldman Sachs Research": 1,
+    "Cogent OA": 1,
+    "Of Dollars And Data": 1,
+    "International Journal of Research Publication and Reviews": 1,
+    "Dimensional Fund Advisors": 1
+   },
+   "headline": "What the last two bubbles tell us about the AI boom"
+  },
+  {
+   "week": "2026-W46",
+   "number": 9,
+   "start": "2026-11-09",
+   "end": "2026-11-15",
+   "count": 34,
+   "found": {
+    "winners": 6,
+    "bubbles": 9,
+    "moats": 5,
+    "valuation": 14
+   },
+   "topics": {
+    "valuation": 14,
+    "winners": 6,
+    "moats": 5,
+    "bubbles": 9
+   },
+   "kinds": {
+    "insight": 13,
+    "preprint": 3,
+    "paper": 17,
+    "report": 1
+   },
+   "horizons": {
+    "long_term": 12,
+    "general": 22
+   },
+   "empirical": 20,
+   "countries": {
+    "US": 16,
+    "GB": 8,
+    "ID": 1,
+    "MY": 1,
+    "CN": 1,
+    "IN": 1,
+    "DE": 1
+   },
+   "methods": {
+    "Long-horizon empirical": 2,
+    "Factor / Cross-sectional": 5,
+    "Econometric": 1,
+    "Valuation model": 5,
+    "Behavioral / Experimental": 12,
+    "AI & Text mining": 1,
+    "Event study": 3
+   },
+   "publishers": {
+    "Klement on Investing": 4,
+    "Alpha Architect": 2,
+    "arXiv (q-fin)": 2,
+    "European Organization for Nuclear Research": 2,
+    "The Journal of Portfolio Management": 2,
+    "The Review of Financial Studies": 2,
+    "Review of Finance": 2,
+    "Novel Investor": 2,
+    "Behavioural Investment": 1,
+    "Institut Agama Islam Negeri (IAIN) Salatiga": 1,
+    "Atlantis Press": 1,
+    "Coventry University": 1,
+    "Elsevier BV": 1,
+    "The Journal of Finance": 1,
+    "Scientific Open Access Publishing": 1,
+    "Musings on Markets (Damodaran)": 1,
+    "Review of Asset Pricing Studies": 1,
+    "Morningstar": 1,
+    "Of Dollars And Data": 1,
+    "Oaktree Capital": 1
+   },
+   "headline": "Is the Illiquidity Premium Really Gone?"
+  },
+  {
+   "week": "2026-W45",
+   "number": 8,
+   "start": "2026-11-02",
+   "end": "2026-11-08",
+   "count": 37,
+   "found": {
+    "valuation": 8,
+    "moats": 7,
+    "bubbles": 14,
+    "winners": 8
+   },
+   "topics": {
+    "winners": 8,
+    "moats": 7,
+    "bubbles": 14,
+    "valuation": 8
+   },
+   "kinds": {
+    "insight": 12,
+    "paper": 22,
+    "preprint": 3
+   },
+   "horizons": {
+    "long_term": 11,
+    "general": 26
+   },
+   "empirical": 26,
+   "countries": {
+    "US": 16,
+    "CH": 1,
+    "KR": 1,
+    "CN": 1,
+    "GB": 9,
+    "MA": 1,
+    "IQ": 1,
+    "AT": 1
+   },
+   "methods": {
+    "Factor / Cross-sectional": 8,
+    "Behavioral / Experimental": 11,
+    "AI & Text mining": 1,
+    "Valuation model": 3,
+    "Event study": 5,
+    "Econometric": 2,
+    "Simulation": 1
+   },
+   "publishers": {
+    "The Journal of Portfolio Management": 4,
+    "Klement on Investing": 4,
+    "arXiv (q-fin)": 3,
+    "Review of Finance": 3,
+    "Alpha Architect": 2,
+    "The Review of Financial Studies": 2,
+    "Taylor & Francis": 2,
+    "The Journal of Finance": 2,
+    "Novel Investor": 2,
+    "BIS Working Papers": 1,
+    "International Journal of Finance and Investment": 1,
+    "Musings on Markets (Damodaran)": 1,
+    "World Economics and Finance Bulletin": 1,
+    "Mohammed V University": 1,
+    "Emerald Publishing Limited": 1,
+    "Malque Publishing": 1,
+    "African Scientific Journal": 1,
+    "Oxford University Press": 1,
+    "Morningstar": 1,
+    "Behavioural Investment": 1
+   },
+   "headline": "Are Value and Momentum Still Everywhere?"
+  },
+  {
+   "week": "2026-W44",
+   "number": 7,
+   "start": "2026-10-26",
+   "end": "2026-11-01",
+   "count": 50,
+   "found": {
+    "winners": 14,
+    "bubbles": 18,
+    "valuation": 11,
+    "moats": 7
+   },
+   "topics": {
+    "winners": 14,
+    "valuation": 11,
+    "bubbles": 18,
+    "moats": 7
+   },
+   "kinds": {
+    "paper": 42,
+    "insight": 4,
+    "preprint": 3,
+    "report": 1
+   },
+   "horizons": {
+    "long_term": 18,
+    "general": 32
+   },
+   "empirical": 45,
+   "countries": {
+    "ES": 1,
+    "US": 20,
+    "AU": 3,
+    "FR": 3,
+    "SG": 1,
+    "ID": 3,
+    "IN": 1,
+    "IT": 1,
+    "UA": 2,
+    "GB": 3,
+    "SA": 1,
+    "TN": 1,
+    "PK": 1,
+    "GH": 1,
+    "TR": 1,
+    "CN": 1,
+    "UG": 1
+   },
+   "methods": {
+    "Behavioral / Experimental": 19,
+    "Econometric": 8,
+    "Long-horizon empirical": 2,
+    "Valuation model": 5,
+    "Factor / Cross-sectional": 6,
+    "Event study": 1,
+    "Simulation": 1,
+    "AI & Text mining": 2,
+    "Meta-analysis / Review": 1
+   },
+   "publishers": {
+    "Journal of Financial Economics": 11,
+    "Wiley": 3,
+    "European Organization for Nuclear Research": 3,
+    "Elsevier BV": 2,
+    "The Journal of Portfolio Management": 2,
+    "Figshare (United Kingdom)": 2,
+    "Musings on Markets (Damodaran)": 1,
+    "The Review of Financial Studies": 1,
+    "WORLD SCIENTIFIC (EUROPE) eBooks": 1,
+    "arXiv (q-fin)": 1,
+    "Oxford Journal of Student Scholarship": 1,
+    "PT Takaza Innovatix Labs": 1,
+    "Journal of Asia Entrepreneurship and Sustainability": 1,
+    "De Gruyter Open": 1,
+    "Universitas Muhammadiyah Sidoarjo": 1,
+    "Iterative International Publishers eBooks": 1,
+    "PsychOpen": 1,
+    "Review of Finance": 1,
+    "Emerald Publishing Limited": 1,
+    "Morningstar": 1
+   },
+   "headline": "Megafires in the Anthropocene: The Need for Active Management of Protected Areas"
+  },
+  {
+   "week": "2026-W43",
+   "number": 6,
+   "start": "2026-10-19",
+   "end": "2026-10-25",
+   "count": 26,
+   "found": {
+    "bubbles": 7,
+    "winners": 8,
+    "moats": 5,
+    "valuation": 6
+   },
+   "topics": {
+    "bubbles": 7,
+    "valuation": 6,
+    "winners": 8,
+    "moats": 5
+   },
+   "kinds": {
+    "paper": 19,
+    "preprint": 4,
+    "insight": 3
+   },
+   "horizons": {
+    "long_term": 11,
+    "general": 15
+   },
+   "empirical": 21,
+   "countries": {
+    "IN": 2,
+    "PH": 1,
+    "CN": 5,
+    "US": 8,
+    "UA": 1,
+    "GB": 2,
+    "AU": 1
+   },
+   "methods": {
+    "Econometric": 3,
+    "Valuation model": 2,
+    "Factor / Cross-sectional": 4,
+    "Behavioral / Experimental": 8,
+    "AI & Text mining": 3
+   },
+   "publishers": {
+    "Atlantis Press": 3,
+    "Springer Science+Business Media": 2,
+    "Elsevier BV": 2,
+    "The Review of Financial Studies": 2,
+    "Review of Finance": 2,
+    "arXiv (q-fin)": 2,
+    "Next generation.": 2,
+    "The Journal of Portfolio Management": 2,
+    "Strategic Learning Solutions, Inc": 1,
+    "Multidisciplinary Digital Publishing Institute": 1,
+    "Seventh Sense Research Group": 1,
+    "European Organization for Nuclear Research": 1,
+    "The Journal of Finance": 1,
+    "Zaporizhzhia National University": 1,
+    "Musings on Markets (Damodaran)": 1,
+    "Of Dollars And Data": 1,
+    "Morningstar": 1
+   },
+   "headline": "Risk-Adjusted Performance Ranking and Clustering Analysis of NIFTY 50 Stocks on the Financial Metrics and Time-Series Forecasting"
+  },
+  {
+   "week": "2026-W42",
+   "number": 5,
+   "start": "2026-10-12",
+   "end": "2026-10-18",
+   "count": 21,
+   "found": {
+    "winners": 7,
+    "moats": 4,
+    "valuation": 3,
+    "bubbles": 7
+   },
+   "topics": {
+    "bubbles": 7,
+    "moats": 4,
+    "valuation": 3,
+    "winners": 7
+   },
+   "kinds": {
+    "paper": 16,
+    "preprint": 3,
+    "insight": 2
+   },
+   "horizons": {
+    "general": 15,
+    "long_term": 6
+   },
+   "empirical": 17,
+   "countries": {
+    "US": 10,
+    "IN": 1,
+    "DE": 1,
+    "AU": 1,
+    "CA": 1,
+    "GB": 2,
+    "BR": 1
+   },
+   "methods": {
+    "Behavioral / Experimental": 6,
+    "Valuation model": 3,
+    "Factor / Cross-sectional": 2,
+    "Econometric": 2,
+    "Simulation": 1,
+    "Event study": 1,
+    "AI & Text mining": 1
+   },
+   "publishers": {
+    "arXiv (q-fin)": 3,
+    "European Organization for Nuclear Research": 2,
+    "The Journal of Finance": 2,
+    "Advances in Economics Management and Political Sciences": 2,
+    "The Journal of Portfolio Management": 2,
+    "Journal of Behavioral Finance": 1,
+    "IGI Global": 1,
+    "Mary Ann Liebert, Inc.": 1,
+    "Review of Asset Pricing Studies": 1,
+    "Elsevier BV": 1,
+    "World Scientific": 1,
+    "Behavioural Investment": 1,
+    "International journal of research and scientific innovation": 1,
+    "Of Dollars And Data": 1,
+    "Routledge": 1
+   },
+   "headline": "The Impact of Investor Sentiment on Earnings Management and Financial Disclosure Behavior: Evidence from China’s A-Share Market"
+  },
+  {
+   "week": "2026-W41",
+   "number": 4,
+   "start": "2026-10-05",
+   "end": "2026-10-11",
+   "count": 35,
+   "found": {
+    "moats": 7,
+    "valuation": 12,
+    "bubbles": 12,
+    "winners": 4
+   },
+   "topics": {
+    "moats": 7,
+    "bubbles": 12,
+    "winners": 4,
+    "valuation": 12
+   },
+   "kinds": {
+    "insight": 2,
+    "paper": 28,
+    "preprint": 5
+   },
+   "horizons": {
+    "long_term": 11,
+    "general": 24
+   },
+   "empirical": 33,
+   "countries": {
+    "US": 14,
+    "NG": 1,
+    "ID": 3,
+    "GB": 5,
+    "CN": 2,
+    "IN": 1
+   },
+   "methods": {
+    "Long-horizon empirical": 5,
+    "Behavioral / Experimental": 8,
+    "Econometric": 5,
+    "Event study": 4,
+    "Meta-analysis / Review": 1,
+    "Valuation model": 3,
+    "AI & Text mining": 2,
+    "Factor / Cross-sectional": 1
+   },
+   "publishers": {
+    "The Journal of Finance": 6,
+    "The Journal of Portfolio Management": 4,
+    "Review of Finance": 3,
+    "arXiv (q-fin)": 3,
+    "Elsevier BV": 2,
+    "The Review of Financial Studies": 2,
+    "Musings on Markets (Damodaran)": 1,
+    "IIARD Publication Co.": 1,
+    "Universitas Merdeka Malang": 1,
+    "Behavioural Investment": 1,
+    "Minnesota Journal of Business Law and Entrepreneurship": 1,
+    "Figshare (United Kingdom)": 1,
+    "SASPR Edu International Pvt. Ltd": 1,
+    "Financial Analysts Journal": 1,
+    "International Journal of Advanced AI Applications": 1,
+    "Emerald Publishing Limited": 1,
+    "Muhammadiyah University of Malang": 1,
+    "European Organization for Nuclear Research": 1,
+    "Edtech Publishers (OPC) Private Limited": 1,
+    "Research Square": 1
+   },
+   "headline": "Stock Prices, Earnings and Cashflows: The AI Effect plays through!"
+  },
+  {
+   "week": "2026-W40",
+   "number": 3,
+   "start": "2026-09-28",
+   "end": "2026-10-04",
+   "count": 54,
+   "found": {
+    "valuation": 19,
+    "moats": 3,
+    "winners": 11,
+    "bubbles": 21
+   },
+   "topics": {
+    "valuation": 19,
+    "bubbles": 21,
+    "winners": 11,
+    "moats": 3
+   },
+   "kinds": {
+    "paper": 46,
+    "report": 2,
+    "insight": 3,
+    "preprint": 3
+   },
+   "horizons": {
+    "general": 40,
+    "long_term": 14
+   },
+   "empirical": 49,
+   "countries": {
+    "US": 23,
+    "CN": 4,
+    "HK": 1,
+    "PL": 1,
+    "ID": 2,
+    "RU": 2,
+    "IN": 7,
+    "TW": 1,
+    "ES": 1,
+    "NL": 1,
+    "GB": 1,
+    "TR": 1,
+    "KR": 1
+   },
+   "methods": {
+    "AI & Text mining": 3,
+    "Valuation model": 7,
+    "Simulation": 1,
+    "Behavioral / Experimental": 15,
+    "Event study": 5,
+    "Long-horizon empirical": 1,
+    "Factor / Cross-sectional": 1,
+    "Econometric": 6
+   },
+   "publishers": {
+    "Journal of Financial Economics": 9,
+    "The Journal of Finance": 6,
+    "Edtech Publishers (OPC) Private Limited": 6,
+    "European Organization for Nuclear Research": 3,
+    "The Journal of Portfolio Management": 3,
+    "European Journal of Business Economics & Management": 1,
+    "Advances in Economics Management and Political Sciences": 1,
+    "Liberty Street Economics (NY Fed)": 1,
+    "Krakow University of Economics": 1,
+    "Currency Jurnal Ekonomi dan Perbankan Syariah": 1,
+    "Dean & Francis Press": 1,
+    "Plekhanov Russian Economic University": 1,
+    "Universitas Tulungagung": 1,
+    "Journal of Economics Finance and Management Studies": 1,
+    "Minnesota Journal of Business Law and Entrepreneurship": 1,
+    "World Scientific": 1,
+    "Emerald Publishing Limited": 1,
+    "University of Information Technology and Management in Rzeszow": 1,
+    "Morningstar": 1,
+    "Journal of Banking & Finance": 1
+   },
+   "headline": "Can ChatGPT forecast stock price movements? Return predictability and large language models"
+  },
+  {
+   "week": "2026-W39",
+   "number": 2,
+   "start": "2026-09-21",
+   "end": "2026-09-27",
+   "count": 21,
+   "found": {
+    "moats": 1,
+    "bubbles": 10,
+    "winners": 5,
+    "valuation": 5
+   },
+   "topics": {
+    "winners": 5,
+    "bubbles": 10,
+    "valuation": 5,
+    "moats": 1
+   },
+   "kinds": {
+    "preprint": 2,
+    "paper": 15,
+    "report": 1,
+    "insight": 3
+   },
+   "horizons": {
+    "long_term": 7,
+    "general": 14
+   },
+   "empirical": 17,
+   "countries": {
+    "US": 11,
+    "IN": 1,
+    "OM": 1,
+    "ID": 1,
+    "MA": 1,
+    "GB": 1,
+    "ZA": 1
+   },
+   "methods": {
+    "Factor / Cross-sectional": 2,
+    "AI & Text mining": 1,
+    "Behavioral / Experimental": 8,
+    "Econometric": 4,
+    "Valuation model": 2,
+    "Event study": 2,
+    "Meta-analysis / Review": 1
+   },
+   "publishers": {
+    "The Review of Financial Studies": 3,
+    "arXiv (q-fin)": 2,
+    "Journal of Behavioral Finance": 1,
+    "Research and Innovation Centre Pro-Akademia": 1,
+    "European Organization for Nuclear Research": 1,
+    "Vision for Scientific Research and Publishing LTD": 1,
+    "Brawijaya University": 1,
+    "Cogent OA": 1,
+    "Journal of Advances in Economics and Management Science": 1,
+    "The Journal of Finance": 1,
+    "Review of Finance": 1,
+    "Financial Analysts Journal": 1,
+    "The Journal of Portfolio Management": 1,
+    "Counterpoint Global": 1,
+    "CFA Institute Enterprising Investor": 1,
+    "Morningstar": 1,
+    "Social Sciences Research Society": 1,
+    "Of Dollars And Data": 1
+   },
+   "headline": "RICE-Alpha: Reliability-Informed Correction with Event Graphs for LLM-Agent Stock Forecasting"
+  },
+  {
+   "week": "2026-W38",
+   "number": 1,
+   "start": "2026-09-14",
+   "end": "2026-09-20",
+   "count": 15,
+   "found": {
+    "valuation": 5,
+    "winners": 3,
+    "bubbles": 6,
+    "moats": 1
+   },
+   "topics": {
+    "valuation": 5,
+    "bubbles": 6,
+    "winners": 3,
+    "moats": 1
+   },
+   "kinds": {
+    "paper": 15
+   },
+   "horizons": {
+    "long_term": 6,
+    "general": 9
+   },
+   "empirical": 15,
+   "countries": {
+    "NG": 1,
+    "US": 6,
+    "KR": 1,
+    "CN": 1,
+    "IT": 1,
+    "EG": 1,
+    "GB": 1,
+    "IR": 1
+   },
+   "methods": {
+    "Factor / Cross-sectional": 3,
+    "Econometric": 4,
+    "Behavioral / Experimental": 4,
+    "Valuation model": 1,
+    "Meta-analysis / Review": 1,
+    "AI & Text mining": 1
+   },
+   "publishers": {
+    "The Review of Financial Studies": 4,
+    "Elsevier BV": 2,
+    "The Journal of Portfolio Management": 2,
+    "IIARD Publication Co.": 1,
+    "Zeus Press": 1,
+    "Journal": 1,
+    "Emerald Publishing Limited": 1,
+    "RSIS International": 1,
+    "EPRA JOURNALS": 1,
+    "International journal of research and scientific innovation": 1
+   },
+   "headline": "Effect of Earnings Quality on Stock Valuation"
+  }
+ ],
+ "topics": {
+  "winners": "Winners & Indexing",
+  "moats": "Quality & Moats",
+  "valuation": "Valuation & Safety",
+  "bubbles": "Bubbles & Behavior"
+ },
+ "totals": {
+  "items": 332,
+  "publishers": 111,
+  "countries": 39,
+  "weeks": 10
+ },
+ "sources": {
+  "databases": [
+   "OpenAlex",
+   "Crossref Finance Journals",
+   "arXiv (q-fin / econ)"
+  ],
+  "publishers": [
+   "A Wealth of Common Sense",
+   "AQR Capital Management",
+   "Alpha Architect",
+   "BIS Working Papers",
+   "Behavioural Investment",
+   "BlackRock Investment Institute",
+   "CFA Institute Enterprising Investor",
+   "Collaborative Fund",
+   "Counterpoint Global",
+   "Dimensional Fund Advisors",
+   "Financial Analysts Journal",
+   "Financial Times",
+   "GMO",
+   "Goldman Sachs Research",
+   "Harvard Business Review",
+   "Journal of Banking & Finance",
+   "Journal of Behavioral Finance",
+   "Journal of Corporate Finance",
+   "Journal of Financial Economics",
+   "Klement on Investing",
+   "Liberty Street Economics (NY Fed)",
+   "Man Institute",
+   "Morningstar",
+   "Musings on Markets (Damodaran)",
+   "NBER Working Papers",
+   "Novel Investor",
+   "Oaktree Capital",
+   "Of Dollars And Data",
+   "Research Affiliates",
+   "Review of Asset Pricing Studies",
+   "Review of Finance",
+   "S&P Dow Jones Indices",
+   "The Economist",
+   "The Journal of Finance",
+   "The Journal of Portfolio Management",
+   "The Review of Financial Studies",
+   "Vanguard Research",
+   "Verdad Research"
+  ]
+ },
+ "health": {
+  "OpenAlex \"index investing\"": 1,
+  "OpenAlex \"stock selection\" AND \"index\"": 7,
+  "OpenAlex \"wealth creation\" AND \"stock market\"": 1,
+  "OpenAlex \"stock returns\" AND \"skewness\"": 3,
+  "OpenAlex \"active management\" AND \"passive\"": 10,
+  "OpenAlex \"stock picking\" AND performance": 1,
+  "OpenAlex \"long-term stock returns\"": 2,
+  "OpenAlex \"equity risk premium\"": 15,
+  "OpenAlex \"economic moat\"": 1,
+  "OpenAlex \"competitive advantage\" AND \"stock returns\"": 0,
+  "OpenAlex \"return on invested capital\"": 11,
+  "OpenAlex \"gross profitability\" AND stocks": 1,
+  "OpenAlex \"earnings growth\" AND \"stock returns\"": 0,
+  "OpenAlex \"quality factor\" AND equity": 0,
+  "OpenAlex \"capital allocation\" AND shareholders": 12,
+  "OpenAlex \"earnings persistence\" AND valuation": 1,
+  "OpenAlex \"value investing\"": 18,
+  "OpenAlex \"fundamental analysis\" AND stocks": 7,
+  "OpenAlex \"margin of safety\" AND investing": 5,
+  "OpenAlex \"intrinsic value\" AND stock": 11,
+  "OpenAlex \"free cash flow\" AND \"stock returns\"": 0,
+  "OpenAlex \"price-to-earnings\" AND \"stock returns\"": 4,
+  "OpenAlex \"artificial intelligence\" AND (\"stock returns\" OR \"equity valuation\")": 12,
+  "OpenAlex \"growth stocks\" AND \"value stocks\"": 1,
+  "OpenAlex \"stock market bubble\"": 2,
+  "OpenAlex \"asset price bubble\"": 4,
+  "OpenAlex \"speculative bubble\" AND stock": 2,
+  "OpenAlex \"investor sentiment\" AND \"stock returns\"": 17,
+  "OpenAlex \"behavioral finance\" AND \"stock market\"": 18,
+  "OpenAlex \"overvaluation\" AND \"stock returns\"": 1,
+  "OpenAlex \"market efficiency\" AND anomaly": 9,
+  "OpenAlex \"retail investors\" AND \"stock market\"": 24,
+  "Crossref The Journal of Finance": 24,
+  "Crossref Journal of Financial Economics": 35,
+  "Crossref The Review of Financial Studies": 21,
+  "Crossref Financial Analysts Journal": 9,
+  "Crossref The Journal of Portfolio Management": 33,
+  "Crossref Journal of Behavioral Finance": 3,
+  "Crossref Review of Finance": 14,
+  "Crossref Journal of Corporate Finance": 3,
+  "Crossref Journal of Banking & Finance": 57,
+  "Crossref Review of Asset Pricing Studies": 2,
+  "arXiv #1": 10,
+  "arXiv #2": 18,
+  "arXiv #3": 10,
+  "Feed NBER Working Papers": 0,
+  "Feed BIS Working Papers": 20,
+  "Feed Liberty Street Economics (NY Fed)": 24,
+  "Feed Musings on Markets (Damodaran)": 7,
+  "Feed Alpha Architect": 5,
+  "Feed A Wealth of Common Sense": 10,
+  "Feed Behavioural Investment": 7,
+  "Feed Klement on Investing": 20,
+  "Feed Of Dollars And Data": 10,
+  "Feed Novel Investor": 6,
+  "News NBER Working Papers": 5,
+  "News CFA Institute Enterprising Investor": 1,
+  "News Collaborative Fund": 0,
+  "News Counterpoint Global": 9,
+  "News Oaktree Capital": 2,
+  "News AQR Capital Management": 0,
+  "News GMO": 2,
+  "News Research Affiliates": 0,
+  "News Verdad Research": 0,
+  "News Morningstar": 22,
+  "News Vanguard Research": 5,
+  "News Dimensional Fund Advisors": 3,
+  "News Man Institute": 0,
+  "News S&P Dow Jones Indices": 4,
+  "News BlackRock Investment Institute": 6,
+  "News Goldman Sachs Research": 19,
+  "News Financial Times": 24,
+  "News The Economist": 6,
+  "News Harvard Business Review": 11
+ }
+}
