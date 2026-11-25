@@ -28,11 +28,11 @@
       updated: "Updated",
       homeHeroLeft: 'Weekly equity & fundamental investing research<span class="hide-sm"><i class="ln"></i>Top works + Canon anchors</span>',
       homeHeroRight: "Updated every Monday",
-      homeHint: "Click any publication to open · Drag to browse",
-      topicHint: "Click any publication to open · All works below",
+      homeHint: "Drag or click spines to browse · Double-click center cover to open",
+      topicHint: "Drag or click spines to browse · Double-click center cover to open",
       canonHeroLeft: 'The Foundational Canon<span class="hide-sm"><i class="ln"></i>Landmark papers & investor letters</span>',
       canonHeroRight: "Timeless mental models · 1949–2025",
-      canonHint: "Click any classic to open · Full Canon library below",
+      canonHint: "Drag or click spines to browse · Double-click center cover to open",
       choosePillar: "Four investing pillars",
       worksThisWeek: "works this week",
       openPillar: "Open",
@@ -140,11 +140,11 @@
       updated: "آخرین به‌روزرسانی",
       homeHeroLeft: 'رصد هفتگی پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی<span class="hide-sm"><i class="ln"></i>برگزیده‌های هفته + آثار ماندگار Canon</span>',
       homeHeroRight: "به‌روزرسانی خودکار هر دوشنبه",
-      homeHint: "روی هر انتشارات کلیک کنید تا باز شود · برای ورق زدن بکشید",
-      topicHint: "روی هر اثر کلیک کنید تا باز شود · فهرست کامل در پایین",
+      homeHint: "برای مرور بکشید یا روی عطف‌ها کلیک کنید · دوبار کلیک روی کاور وسط برای باز کردن",
+      topicHint: "برای مرور بکشید یا روی عطف‌ها کلیک کنید · دوبار کلیک روی کاور وسط برای باز کردن",
       canonHeroLeft: 'قفسه آثار ماندگار (The Canon)<span class="hide-sm"><i class="ln"></i>مقالات بنیادین و نامه‌های سرمایه‌گذاران</span>',
       canonHeroRight: "چارچوب‌های فکری ماندگار · 1949–2025",
-      canonHint: "روی هر اثر ماندگار کلیک کنید تا باز شود · کتابخانه کامل در پایین",
+      canonHint: "برای مرور بکشید یا روی عطف‌ها کلیک کنید · دوبار کلیک روی کاور وسط برای باز کردن",
       choosePillar: "چهار ستون چارچوب فکری سرمایه‌گذار",
       worksThisWeek: "پژوهش این هفته",
       openPillar: "ورود به بخش",
@@ -728,13 +728,15 @@
       if (dd.moved) { Tt = Math.round(Tt); return; }
       if (dd.v == null) return;
       const r = rel(dd.v, s);
-      const clicked = items[dd.v % n];
-      const tp = tapes[dd.v];
-      const rectEl = Math.abs(r) < .5 ? (tp?.cv || tp?.sp) : (tp?.sp || tp?.cv);
-      go(Math.round(Tt + r));
-      if (clicked) openSheet(clicked, rectEl?.getBoundingClientRect());
+      if (Math.abs(r) >= .5) go(Math.round(Tt + r));
     };
     window.addEventListener("pointermove", pm); window.addEventListener("pointerup", pu); window.addEventListener("pointercancel", pu);
+    shelf.addEventListener("dblclick", e => {
+      const tp = e.target.closest(".tape");
+      if (!tp) return;
+      const r = rel(+tp.dataset.v, s);
+      if (Math.abs(r) < .6) { e.preventDefault(); openActive(); }
+    });
     shelf.addEventListener("wheel", e => {
       if (!$("#sheet").hidden || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
@@ -744,7 +746,7 @@
     prev.addEventListener("click", () => step(-1));
     next.addEventListener("click", () => step(1));
     ring.addEventListener("click", openActive);
-    cap.addEventListener("click", openActive);
+    cap.addEventListener("dblclick", openActive);
     ruler.addEventListener("click", e => {
       const r = ruler.getBoundingClientRect(), day = Math.max(0, Math.min(6, Math.floor((e.clientX - r.left) / r.width * 7)));
       const cur = idx(Tt); let best = null;
