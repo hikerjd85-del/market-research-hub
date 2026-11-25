@@ -448,7 +448,7 @@
     const r = seed((it.id || it.title) + "sp"), c = hex(it.topic), p = SPINES[Math.floor(r() * SPINES.length)](c);
     const art = `<svg viewBox="75 470 324 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${panel(it, scene(it))}</svg>`;
     const code = it.canon ? "CLSC" : (KIND[it.kind]?.code || "DOC");
-    return `<div class="face sp" style="--bg:${p.bg};--fg:${p.fg};--ac:${p.ac}"><span class="sp-art">${art}</span><span class="sp-t">${esc(trim(it.title, 54))}</span><span class="sp-p">${esc(trim(pub(it.publisher), 18))}</span><span class="sp-logo">${plogo(it.publisher)}</span><span class="sp-k">${code}</span></div>`;
+    return `<div class="face sp" style="--bg:${p.bg};--fg:${p.fg};--ac:${p.ac}"><span class="sp-art">${art}</span><span class="sp-t">${esc(trim(it.title, 36))}</span><span class="sp-p">${esc(trim(pub(it.publisher), 15))}</span><span class="sp-logo">${plogo(it.publisher)}</span><span class="sp-k">${code}</span></div>`;
   }
   function wrapLines(text, max, maxLines) {
     const words = String(text).split(/\s+/), lines = [];
@@ -708,35 +708,57 @@
     const step = dlt => go(Math.round(Tt) + dlt);
     const openActive = () => { Tt = Math.round(Tt); const it = items[idx(Tt)]; openSheet(it, coverOf(it)?.getBoundingClientRect()); };
 
+    let lastTap = { id: null, t: 0 };
+    const isCenterHit = (e, v) => {
+      if (v != null && Math.abs(rel(v, s)) < .55) return true;
+      const hr = hero.getBoundingClientRect();
+      const hx = e.clientX - hr.left, hy = e.clientY - hr.top;
+      return Math.abs(hx - W / 2) < .58 * d && Math.abs(hy - cy) < .54 * H;
+    };
+    const tapCenter = () => {
+      const cur = items[idx(Tt)];
+      if (!cur) return;
+      const now = performance.now();
+      if (lastTap.id === cur.id && now - lastTap.t < 1500) {
+        lastTap = { id: null, t: 0 };
+        openActive();
+      } else {
+        lastTap = { id: cur.id, t: now };
+        ring.animate([{ transform: "scale(1)" }, { transform: "scale(1.22)" }, { transform: "scale(1)" }], { duration: 280, easing: EASE });
+      }
+    };
+
     const onMove = e => { const r = hero.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; const tp = e.target.closest && e.target.closest(".tape"); hoverV = tp ? +tp.dataset.v : -1; };
     const onLeave = () => { mx = my = -1e4; hoverV = -1; };
     hero.addEventListener("pointermove", onMove); hero.addEventListener("pointerleave", onLeave);
     shelf.addEventListener("pointerdown", e => {
       if (e.button !== 0) return;
       const tp = e.target.closest(".tape");
-      drag = { x0: e.clientX, T0: Tt, moved: false, v: tp ? +tp.dataset.v : null, id: e.pointerId };
+      drag = { x0: e.clientX, y0: e.clientY, T0: Tt, moved: false, v: tp ? +tp.dataset.v : null, id: e.pointerId };
     });
     const pm = e => {
       if (!drag || e.pointerId !== drag.id) return;
       const dx = e.clientX - drag.x0;
-      if (!drag.moved && Math.abs(dx) > 5) { drag.moved = true; shelf.classList.add("dragging"); try { shelf.setPointerCapture(drag.id); } catch (_) {} }
+      if (!drag.moved && Math.abs(dx) > 6) { drag.moved = true; shelf.classList.add("dragging"); try { shelf.setPointerCapture(drag.id); } catch (_) {} }
       if (drag.moved) Tt = drag.T0 - dx / (ws + gap);
     };
     const pu = e => {
       if (!drag || e.pointerId !== drag.id) return;
       const dd = drag; drag = null; shelf.classList.remove("dragging");
-      if (dd.moved) { Tt = Math.round(Tt); return; }
+      if (dd.moved) { Tt = Math.round(Tt); lastTap = { id: null, t: 0 }; return; }
+      if (isCenterHit(e, dd.v)) {
+        tapCenter();
+        return;
+      }
       if (dd.v == null) return;
       const r = rel(dd.v, s);
-      if (Math.abs(r) >= .5) go(Math.round(Tt + r));
+      if (Math.abs(r) >= .5) {
+        const target = items[dd.v % n];
+        go(Math.round(Tt + r));
+        lastTap = { id: target?.id || null, t: performance.now() + 900 };
+      }
     };
     window.addEventListener("pointermove", pm); window.addEventListener("pointerup", pu); window.addEventListener("pointercancel", pu);
-    shelf.addEventListener("dblclick", e => {
-      const tp = e.target.closest(".tape");
-      if (!tp) return;
-      const r = rel(+tp.dataset.v, s);
-      if (Math.abs(r) < .6) { e.preventDefault(); openActive(); }
-    });
     shelf.addEventListener("wheel", e => {
       if (!$("#sheet").hidden || Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
       e.preventDefault();
@@ -746,7 +768,7 @@
     prev.addEventListener("click", () => step(-1));
     next.addEventListener("click", () => step(1));
     ring.addEventListener("click", openActive);
-    cap.addEventListener("dblclick", openActive);
+    cap.addEventListener("click", tapCenter);
     ruler.addEventListener("click", e => {
       const r = ruler.getBoundingClientRect(), day = Math.max(0, Math.min(6, Math.floor((e.clientX - r.left) / r.width * 7)));
       const cur = idx(Tt); let best = null;
