@@ -125,9 +125,73 @@ main { outline: none; min-height: 70vh; }
 .tabs { display: flex; gap: 2px; margin-inline-start: auto; }
 .tab {
   --c: var(--ink);
+  position: relative;
   display: flex; align-items: center; gap: 6px; padding: 7px 11px 7px 9px; border-radius: 999px;
   text-decoration: none; font-weight: 600; font-size: .81rem; color: var(--ink-2); white-space: nowrap;
   transition: background .2s, color .2s;
+}
+
+/* Editorial hover/focus info popovers for Explore / Canon / Brief & Pillar tabs */
+.nav-tip {
+  position: absolute;
+  top: calc(100% + 12px);
+  inset-inline-start: 0;
+  width: 276px;
+  padding: 13px 15px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--hair-2);
+  box-shadow: 0 22px 46px -18px rgba(15, 25, 22, .45), 0 4px 12px -4px rgba(15, 25, 22, .16);
+  white-space: normal;
+  text-align: start;
+  line-height: 1.5;
+  pointer-events: none;
+  z-index: 95;
+  opacity: 0;
+  transform: translateY(-6px) scale(.98);
+  transition: opacity .18s var(--ease), transform .2s var(--ease);
+}
+.nav-tip::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  inset-inline-start: 22px;
+  width: 10px;
+  height: 10px;
+  background: var(--card);
+  border-top: 1px solid var(--hair-2);
+  border-left: 1px solid var(--hair-2);
+  transform: rotate(45deg);
+}
+.nav-tip strong {
+  display: block;
+  font-size: .84rem;
+  font-weight: 700;
+  color: var(--brand-ink);
+  margin-bottom: 4px;
+}
+.nav-tip > span {
+  display: block;
+  font-size: .79rem;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+html[lang="fa"] .nav-tip { font-family: var(--fa-sans); line-height: 1.65; width: 296px; }
+html[lang="fa"] .nav-tip strong { font-size: .85rem; }
+html[lang="fa"] .nav-tip > span { font-size: .78rem; }
+.tab .nav-tip { inset-inline-start: auto; inset-inline-end: 0; width: 260px; }
+.tab .nav-tip::before { inset-inline-start: auto; inset-inline-end: 22px; }
+.tab .nav-tip strong { color: var(--c); }
+.mode a:hover .nav-tip,
+.mode a:focus-visible .nav-tip,
+.tab:hover .nav-tip,
+.tab:focus-visible .nav-tip {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+[data-theme="dark"] .nav-tip {
+  box-shadow: 0 24px 54px -16px rgba(0, 0, 0, .82);
 }
 .tab svg { width: 15px; height: 15px; fill: none; stroke: var(--c); color: var(--c); stroke-width: 1.85; stroke-linecap: round; stroke-linejoin: round; flex: none; transition: stroke .2s; }
 .tab:hover { background: color-mix(in srgb, var(--c) 11%, transparent); color: var(--ink); }
@@ -218,7 +282,8 @@ html[lang="fa"] .lbl-local { font-family: var(--fa-sans); letter-spacing: 0; tex
 .ring-open:hover { background: var(--c); color: #fff; }
 .ring-open svg { width: 14px; height: 14px; }
 
-.cap { position: absolute; left: 50%; transform: translateX(-50%); width: min(60vw, 600px); display: grid; justify-items: center; gap: 8px; z-index: 20; text-align: center; color: var(--c); }
+.cap { position: absolute; left: 50%; transform: translateX(-50%); width: min(60vw, 600px); display: grid; justify-items: center; gap: 8px; z-index: 20; text-align: center; color: var(--c); cursor: pointer; }
+.cap:hover .cap-title { color: var(--c); }
 .mask { display: grid; overflow: hidden; width: 100%; }
 .mask > span { grid-area: 1 / 1; display: block; }
 .cap-sub { font-size: 10.5px; letter-spacing: .16em; }
@@ -676,6 +741,7 @@ html[lang="fa"] .reel-th span { font-family: var(--fa-sans); }
   .mast-ctrl { margin-inline-start: auto; }
   .tabs { order: 3; width: 100%; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad) 6px; overflow-x: auto; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
+  .tab .nav-tip { display: none; }
   .canon-grid, .ld-three { grid-template-columns: 1fr; }
   .ld-kpis { grid-template-columns: repeat(2, 1fr); }
 }

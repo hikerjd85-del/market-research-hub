@@ -13,6 +13,12 @@
       modeExplore: "Explore",
       modeCanon: "Canon",
       modeBrief: "Brief",
+      tipExploreTitle: "Explore · Weekly Observatory",
+      tipExploreDesc: "Browse this week's newest academic papers & essays on the 3D shelf, track shifting topics in the Theme River, and explore research by country.",
+      tipCanonTitle: "The Canon · Timeless Foundations",
+      tipCanonDesc: "16 landmark papers & investor letters—Bessembinder, Bubbles for Fama, Buffett, Lynch, Mauboussin & Marks—distilled into key stats and mental models.",
+      tipBriefTitle: "Investor Brief · 2-Min Weekly Digest",
+      tipBriefDesc: "Weekly KPI trends, Three to Read, Rising Themes, Long-Horizon Evidence, 30-second Reel, and one-click Excel, Word & PDF exports.",
       close: "Close",
       readAt: "Read at",
       readAtSource: "Read at source",
@@ -22,11 +28,11 @@
       updated: "Updated",
       homeHeroLeft: 'Weekly equity & fundamental investing research<span class="hide-sm"><i class="ln"></i>Top works + Canon anchors</span>',
       homeHeroRight: "Updated every Monday",
-      homeHint: "Explore the four pillars below",
-      topicHint: "All works in this pillar below",
+      homeHint: "Click any publication to open · Drag to browse",
+      topicHint: "Click any publication to open · All works below",
       canonHeroLeft: 'The Foundational Canon<span class="hide-sm"><i class="ln"></i>Landmark papers & investor letters</span>',
       canonHeroRight: "Timeless mental models · 1949–2025",
-      canonHint: "Browse the full Canon library below",
+      canonHint: "Click any classic to open · Full Canon library below",
       choosePillar: "Four investing pillars",
       worksThisWeek: "works this week",
       openPillar: "Open",
@@ -119,6 +125,12 @@
       modeExplore: "کاوش هفتگی",
       modeCanon: "آثار ماندگار",
       modeBrief: "بریف سرمایه‌گذار",
+      tipExploreTitle: "کاوش هفتگی (Explore)",
+      tipExploreDesc: "جدیدترین مقالات علمی و یادداشت‌های تحلیلی این هفته روی قفسه سه‌بعدی، روند تغییر توجه بازار در Theme River و نقشه جهانی پژوهش‌ها.",
+      tipCanonTitle: "آثار ماندگار (The Canon)",
+      tipCanonDesc: "۱۶ پژوهش و نامه بنیادین—از Bessembinder و Bubbles for Fama تا Buffett، Peter Lynch، Mauboussin و Howard Marks—با آمار کلیدی و چارچوب فکری سرمایه‌گذاری بلندمدت.",
+      tipBriefTitle: "بریف سرمایه‌گذار (Investor Brief)",
+      tipBriefDesc: "خلاصه ۲ دقیقه‌ای هفته: شاخص‌های کلیدی، ۳ مطالعه برگزیده، موضوعات در حال صعود، شواهد بلندمدت، ریل ۳۰ ثانیه‌ای و خروجی Excel، Word و PDF.",
       close: "بستن",
       readAt: "مطالعه در",
       readAtSource: "مطالعه در منبع اصلی",
@@ -128,11 +140,11 @@
       updated: "آخرین به‌روزرسانی",
       homeHeroLeft: 'رصد هفتگی پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی<span class="hide-sm"><i class="ln"></i>برگزیده‌های هفته + آثار ماندگار Canon</span>',
       homeHeroRight: "به‌روزرسانی خودکار هر دوشنبه",
-      homeHint: "چهار ستون اصلی پژوهش را در پایین ببینید",
-      topicHint: "فهرست کامل پژوهش‌های این ستون در پایین",
+      homeHint: "روی هر انتشارات کلیک کنید تا باز شود · برای ورق زدن بکشید",
+      topicHint: "روی هر اثر کلیک کنید تا باز شود · فهرست کامل در پایین",
       canonHeroLeft: 'قفسه آثار ماندگار (The Canon)<span class="hide-sm"><i class="ln"></i>مقالات بنیادین و نامه‌های سرمایه‌گذاران</span>',
       canonHeroRight: "چارچوب‌های فکری ماندگار · 1949–2025",
-      canonHint: "کتابخانه کامل آثار ماندگار در پایین",
+      canonHint: "روی هر اثر ماندگار کلیک کنید تا باز شود · کتابخانه کامل در پایین",
       choosePillar: "چهار ستون چارچوب فکری سرمایه‌گذار",
       worksThisWeek: "پژوهش این هفته",
       openPillar: "ورود به بخش",
@@ -513,7 +525,7 @@
   }
 
   function renderTabs() {
-    $("#tabs").innerHTML = TABS.map(t => `<a class="tab" href="#/${t.slug}" data-k="${t.key}" style="--c:${cvar(t.key)}">${icon(t.key)}<span>${esc(tabName(t))}</span></a>`).join("");
+    $("#tabs").innerHTML = TABS.map(t => `<a class="tab" href="#/${t.slug}" data-k="${t.key}" style="--c:${cvar(t.key)}">${icon(t.key)}<span>${esc(tabName(t))}</span><span class="nav-tip" role="tooltip"><strong>${esc(tabName(t))}</strong><span>${esc(tabLine(t))}</span></span></a>`).join("");
     markTab();
   }
   function markTab() {
@@ -666,7 +678,7 @@
       const tX = onCover ? -(my - cy) / (H / 2) * 5 : 0;
       const e7 = reduced ? 1 : 1 - Math.exp(-7 * dt);
       tiltY += (tY - tiltY) * e7; tiltX += (tX - tiltX) * e7;
-      shelf.style.cursor = drag && drag.moved ? "grabbing" : onCover ? "pointer" : "";
+      shelf.style.cursor = drag && drag.moved ? "grabbing" : (onCover || hoverV >= 0) ? "pointer" : "";
       for (let v = 0; v < N; v++) {
         const tp = tapes[v], r = rel(v, s), o = sstep(Math.max(0, 1 - Math.abs(r))), u = F(r);
         if (Math.abs(u) > U * 1.95) { if (tp.vis !== false) { tp.el.style.visibility = "hidden"; tp.vis = false; } continue; }
@@ -716,7 +728,11 @@
       if (dd.moved) { Tt = Math.round(Tt); return; }
       if (dd.v == null) return;
       const r = rel(dd.v, s);
-      if (Math.abs(r) < .5) openActive(); else go(Math.round(Tt + r));
+      const clicked = items[dd.v % n];
+      const tp = tapes[dd.v];
+      const rectEl = Math.abs(r) < .5 ? (tp?.cv || tp?.sp) : (tp?.sp || tp?.cv);
+      go(Math.round(Tt + r));
+      if (clicked) openSheet(clicked, rectEl?.getBoundingClientRect());
     };
     window.addEventListener("pointermove", pm); window.addEventListener("pointerup", pu); window.addEventListener("pointercancel", pu);
     shelf.addEventListener("wheel", e => {
@@ -728,6 +744,7 @@
     prev.addEventListener("click", () => step(-1));
     next.addEventListener("click", () => step(1));
     ring.addEventListener("click", openActive);
+    cap.addEventListener("click", openActive);
     ruler.addEventListener("click", e => {
       const r = ruler.getBoundingClientRect(), day = Math.max(0, Math.min(6, Math.floor((e.clientX - r.left) / r.width * 7)));
       const cur = idx(Tt); let best = null;
