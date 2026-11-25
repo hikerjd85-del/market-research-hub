@@ -1098,6 +1098,7 @@
     inkRaf = requestAnimationFrame(ink);
     sheet.focus({ preventScroll: true });
     state.openId = it.id; setUrl();
+    trackEvent("open_work", { topic: it.topic, canon: Boolean(it.canon), lang: LANG });
   }
   function closeSheet() {
     const sheet = $("#sheet"); if (sheet.hidden || sheet.dataset.closing) return;
@@ -1637,15 +1638,15 @@
       const lw = e.target.closest("[data-lw]");
       if (lw && lw.dataset.lw) { state.week = lw.dataset.lw; setUrl(); return renderBrief(); }
       const ex = e.target.closest("[data-exp]");
-      if (ex && state.brief) { const f = { xlsx: exportXlsx, docx: exportDocx, pdf: exportPdf }[ex.dataset.exp]; if (f) f(state.brief); return; }
+      if (ex && state.brief) { const f = { xlsx: exportXlsx, docx: exportDocx, pdf: exportPdf }[ex.dataset.exp]; if (f) { trackEvent("export_brief", { format: ex.dataset.exp, lang: LANG }); f(state.brief); } return; }
       const row = e.target.closest(".row[data-id]");
       if (row && state.issue) { const it = state.issue.items.find(i => i.id === row.dataset.id); if (it) openSheet(it, row.getBoundingClientRect()); return; }
       const kind = e.target.closest("[data-kind]");
       if (kind) { state.kind = kind.dataset.kind; state.shown = 20; return renderRows(); }
       if (e.target.closest("#lhBtn")) { state.longHorizon = !state.longHorizon; state.shown = 20; return renderRows(); }
       if (e.target.closest("#empBtn")) { state.empirical = !state.empirical; state.shown = 20; return renderRows(); }
-      const rb = e.target.closest("[data-reel]"); if (rb) return playReel(rb.dataset.reel);
-      if (e.target.closest("#sShare") && sheetIt) return openShare(sheetIt);
+      const rb = e.target.closest("[data-reel]"); if (rb) { trackEvent("play_reel", { lang: LANG }); return playReel(rb.dataset.reel); }
+      if (e.target.closest("#sShare") && sheetIt) { trackEvent("share_card", { topic: sheetIt.topic, lang: LANG }); return openShare(sheetIt); }
       if (e.target.closest("[data-mapm]")) { const b = e.target.closest("[data-mapm]"); b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); return mountMap($("#map"), b.dataset.mapm); }
       if (e.target.closest("#more")) { state.shown += 20; return renderRows(); }
       if (e.target.closest("#clear")) { state.kind = "all"; state.longHorizon = false; state.empirical = false; state.q = ""; const q = $("#q"); if (q) q.value = ""; return renderRows(); }
@@ -1669,6 +1670,7 @@
     $("#langToggle").addEventListener("click", async () => {
       LANG = LANG === "en" ? "fa" : "en";
       try { localStorage.setItem("mrh-lang", LANG); } catch (e) {}
+      trackEvent("lang_switch", { lang: LANG });
       const wasOpen = sheetIt;
       applyStaticLang();
       await route(false, true);
@@ -1697,6 +1699,17 @@
     const sel = document.querySelector(`.slot[data-week="${w}"]`); if (sel) sel.focus({ preventScroll: true });
   }
 
+  let lastTrackedPath = null;
+  function trackView() {
+    const path = state.tab ? `/${state.tab.slug}` : state.page === "brief" ? "/brief" : state.page === "canon" ? "/canon" : "/";
+    if (path === lastTrackedPath) return;
+    lastTrackedPath = path;
+    try { window.va && window.va("pageview", { route: path, path }); } catch (e) {}
+  }
+  function trackEvent(name, data) {
+    try { window.va && window.va("event", { name, data }); } catch (e) {}
+  }
+
   async function route(initial, keepScroll) {
     const r = parseHash();
     const t = BY_SLUG[r.slug] || null, prev = state.tab;
@@ -1708,6 +1721,7 @@
     state.openId = null; hideSheetNow();
     if (!keepScroll) window.scrollTo(0, 0);
     markMode();
+    trackView();
     if (t) await renderTab(true);
     else if (state.page === "brief") await renderBrief();
     else if (state.page === "canon") await renderCanon();
