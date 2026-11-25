@@ -230,7 +230,7 @@ html[data-intro="off"] .intro-strip { display: none; }
   background: linear-gradient(90deg, color-mix(in srgb, var(--brand-ink) 7%, var(--card)) 0%, var(--card) 52%, color-mix(in srgb, var(--gold) 8%, var(--card)) 100%);
   border-bottom: 1px solid var(--hair);
   overflow: hidden;
-  max-height: 180px;
+  max-height: 320px;
   transition: max-height .32s var(--ease), opacity .24s ease, border-color .24s ease;
 }
 .intro-strip.closing {
@@ -291,7 +291,7 @@ html[lang="fa"] .intro-kicker {
 .intro-copy strong { color: var(--ink); font-weight: 700; }
 .intro-copy em { font-family: var(--serif); font-style: italic; color: var(--ink); }
 html[lang="fa"] .intro-copy { font-size: .86rem; line-height: 1.65; }
-html[lang="fa"] .intro-copy em { font-family: var(--display); font-style: normal; font-weight: 600; direction: ltr; unicode-bidi: isolate; display: inline-block; }
+html[lang="fa"] .intro-copy em { font-family: var(--display); font-style: normal; font-weight: 600; direction: ltr; unicode-bidi: isolate; }
 .intro-close {
   flex: none;
   display: inline-flex;

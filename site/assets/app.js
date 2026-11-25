@@ -494,7 +494,9 @@
   function coverInner(it) {
     const c = hex(it.topic), ink = "#151412", cream = "#F5F0E4";
     const title = wrapLines(it.title.toUpperCase(), 15, 6);
-    const fs = title.length > 5 ? 39 : title.length > 3 ? 45 : 53;
+    const maxLen = Math.max(...title.map(l => l.length), 1);
+    const baseFs = title.length > 5 ? 39 : title.length > 3 ? 45 : 51;
+    const fs = Math.min(baseFs, Math.floor(404 / (maxLen * .61)));
     let s = `<rect width="474" height="900" fill="${cream}"/><rect width="474" height="900" fill="url(#cvTex)" opacity=".5"/>`;
     s += coverMast(it, ink);
     title.forEach((l, i) => { s += `<text x="34" y="${126 + i * (fs * 1.03)}" font-family="Inter Tight, sans-serif" font-weight="800" font-size="${fs}" letter-spacing="-1" fill="${c}">${esc(l)}</text>`; });
