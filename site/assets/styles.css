@@ -95,19 +95,19 @@ main { outline: none; min-height: 70vh; }
   background: var(--mast); backdrop-filter: blur(14px) saturate(1.4);
   border-bottom: 1px solid var(--hair);
 }
-.mast-in { max-width: 1460px; margin: 0 auto; padding: 10px var(--pad); display: flex; align-items: center; gap: 14px; }
-.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex: none; }
-.logo { display: block; flex: none; }
-.wm { font-family: var(--display); font-size: 1.05rem; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; direction: ltr; }
+.mast-in { max-width: 1460px; width: 100%; margin: 0 auto; padding: 9px clamp(14px, 2.2vw, 32px); display: flex; align-items: center; gap: clamp(8px, 1vw, 14px); }
+.brand { display: flex; align-items: center; gap: 9px; text-decoration: none; flex: none; }
+.logo { display: block; flex: none; width: 34px; height: 34px; }
+.wm { font-family: var(--display); font-size: .98rem; font-weight: 800; letter-spacing: -.02em; white-space: nowrap; direction: ltr; }
 .wm em { font-weight: 500; font-family: var(--serif); font-size: 1.1em; color: var(--pulse); }
 
 .mode { display: flex; flex: none; background: var(--mode-bg); border-radius: 999px; padding: 3px; gap: 2px; }
 .mode a {
-  display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
-  color: rgba(255, 255, 255, .74); text-decoration: none; font-weight: 600; font-size: .8rem;
+  display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 999px;
+  color: rgba(255, 255, 255, .74); text-decoration: none; font-weight: 600; font-size: .78rem;
   transition: background .25s, color .25s; white-space: nowrap; position: relative;
 }
-.mode a svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.mode a svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 .mode a:hover { color: #fff; }
 .mode a[aria-current="page"] { background: var(--paper); color: var(--ink); }
 [data-theme="dark"] .mode a[aria-current="page"] { background: var(--ink); color: #0D1110; }
@@ -122,12 +122,12 @@ main { outline: none; min-height: 70vh; }
 @keyframes briefGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(200, 75, 49, 0); } 50% { box-shadow: 0 0 0 6px rgba(200, 75, 49, .28); } }
 @keyframes dotPing { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .8); } 100% { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0); } }
 
-.tabs { display: flex; gap: 2px; margin-inline-start: auto; }
+.tabs { display: flex; gap: 2px; margin-inline-start: auto; min-width: 0; }
 .tab {
   --c: var(--ink);
   position: relative;
-  display: flex; align-items: center; gap: 6px; padding: 7px 11px 7px 9px; border-radius: 999px;
-  text-decoration: none; font-weight: 600; font-size: .81rem; color: var(--ink-2); white-space: nowrap;
+  display: flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 999px;
+  text-decoration: none; font-weight: 600; font-size: .78rem; color: var(--ink-2); white-space: nowrap;
   transition: background .2s, color .2s;
 }
 
@@ -198,11 +198,11 @@ html[lang="fa"] .nav-tip > span { font-size: .78rem; }
 .tab[aria-current="page"] { background: var(--c); color: #fff; }
 .tab[aria-current="page"] svg { stroke: #fff; }
 
-.mast-ctrl { display: flex; align-items: center; gap: 8px; flex: none; }
+.mast-ctrl { display: flex; align-items: center; gap: 6px; flex: none; }
 .lang-btn {
-  display: inline-flex; align-items: center; gap: 4px; height: 34px; padding: 0 11px;
+  display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 9px;
   border-radius: 999px; border: 1px solid var(--hair-2); background: var(--card); color: var(--ink);
-  font-weight: 700; font-size: .78rem; transition: background .2s, border-color .2s; direction: ltr;
+  font-weight: 700; font-size: .75rem; transition: background .2s, border-color .2s; direction: ltr;
 }
 .lang-btn:hover { border-color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, var(--card)); }
 .lang-btn .lg-en { font-family: var(--display); opacity: .45; }
@@ -211,7 +211,7 @@ html[lang="fa"] .nav-tip > span { font-size: .78rem; }
 html[lang="en"] .lang-btn .lg-en { opacity: 1; color: var(--brand-ink); }
 html[lang="fa"] .lang-btn .lg-fa { opacity: 1; color: var(--brand-ink); }
 
-.theme { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair-2); background: transparent; color: var(--ink); display: grid; place-items: center; transition: background .2s, border-color .2s; }
+.theme { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--hair-2); background: transparent; color: var(--ink); display: grid; place-items: center; transition: background .2s, border-color .2s; }
 .theme:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
 .theme svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; grid-area: 1 / 1; transition: transform .45s var(--ease), opacity .3s; }
 .theme .moon { opacity: 0; transform: rotate(-60deg) scale(.6); }
@@ -836,10 +836,10 @@ html[lang="fa"] .reel-th span { font-family: var(--fa-sans); }
 .stamp { color: var(--mute); font-size: .84rem; }
 
 /* =================== Responsive & Print =================== */
-@media (max-width: 1120px) {
-  .mast-in { flex-wrap: wrap; gap: 10px 14px; padding-bottom: 8px; }
+@media (max-width: 1180px) {
+  .mast-in { flex-wrap: wrap; gap: 8px 12px; padding-bottom: 8px; }
   .mast-ctrl { margin-inline-start: auto; }
-  .tabs { order: 3; width: 100%; margin: 0 calc(var(--pad) * -1); padding: 0 var(--pad) 6px; overflow-x: auto; scrollbar-width: none; }
+  .tabs { order: 3; width: 100%; margin: 0; padding: 2px 0 4px; overflow-x: auto; scrollbar-width: none; justify-content: flex-start; border-top: 1px solid color-mix(in srgb, var(--hair) 65%, transparent); padding-top: 6px; }
   .tabs::-webkit-scrollbar { display: none; }
   .tab .nav-tip { display: none; }
   .canon-grid, .ld-three { grid-template-columns: 1fr; }

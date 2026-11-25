@@ -125,9 +125,9 @@
     fa: {
       siteTitle: "Market Research Hub — رصدخانه پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی",
       skip: "پرش به محتوا",
-      modeExplore: "کاوش هفتگی",
+      modeExplore: "کاوش",
       modeCanon: "آثار ماندگار",
-      modeBrief: "بریف سرمایه‌گذار",
+      modeBrief: "بریف",
       tipExploreTitle: "کاوش هفتگی (Explore)",
       tipExploreDesc: "جدیدترین مقالات علمی و یادداشت‌های تحلیلی این هفته روی قفسه سه‌بعدی، روند تغییر توجه بازار در Theme River و نقشه جهانی پژوهش‌ها.",
       tipCanonTitle: "آثار ماندگار (The Canon)",
@@ -255,28 +255,28 @@
   const TABS = [
     {
       slug: "winners-indexing", key: "winners",
-      name: "Winners & Indexing", name_fa: "برندگان و Index",
+      name: "Winners & Indexing", name_fa: "برندگان و Index", short_fa: "برندگان و Index",
       line: "Stock selection vs. broad indexing, return skewness, and long-horizon wealth creation.",
       line_fa: "مقایسه انتخاب تک‌سهم با Index گسترده، چولگی بازده (Skewness) و خلق ثروت بلندمدت.",
       words: ["SKEWNESS", "INDEXING"],
     },
     {
       slug: "quality-moats", key: "moats",
-      name: "Quality & Moats", name_fa: "کیفیت و Moats",
+      name: "Quality & Moats", name_fa: "کیفیت و Moats", short_fa: "کیفیت و Moats",
       line: "Sustainable Economic Moats, ROIC persistence, 5–10 year EPS growth, and capital allocation.",
       line_fa: "مزیت رقابتی پایدار (Economic Moat)، پایداری ROIC، رشد ۵ تا ۱۰ ساله EPS و تخصیص سرمایه.",
       words: ["QUALITY", "COMPOUND"],
     },
     {
       slug: "valuation-safety", key: "valuation",
-      name: "Valuation & Safety", name_fa: "ارزش‌گذاری و Margin of Safety",
+      name: "Valuation & Safety", name_fa: "ارزش‌گذاری و Margin of Safety", short_fa: "ارزش‌گذاری و Safety",
       line: "Great companies vs. good stocks, Margin of Safety, and whether hot industries like AI deliver stock returns.",
       line_fa: "تفاوت شرکت عالی با سهم خوش‌قیمت، Margin of Safety و اینکه آیا رشد صنایعی مثل AI الزاماً به بازده سهام منجر می‌شود.",
       words: ["INTRINSIC", "VALUATION"],
     },
     {
       slug: "bubbles-behavior", key: "bubbles",
-      name: "Bubbles & Behavior", name_fa: "حباب‌ها و رفتار بازار",
+      name: "Bubbles & Behavior", name_fa: "حباب‌ها و رفتار بازار", short_fa: "حباب‌ها و رفتار",
       line: "Separating fundamental growth from speculative bubbles, market cycles, and behavioral discipline.",
       line_fa: "تشخیص رشد بنیادی از هیجان و حباب قیمتی، چرخه‌های بازار و تصمیم‌گیری منطقی در نوسانات.",
       words: ["BUBBLES", "CYCLES"],
@@ -285,6 +285,7 @@
   const BY_SLUG = Object.fromEntries(TABS.map(t => [t.slug, t]));
   const BY_KEY = Object.fromEntries(TABS.map(t => [t.key, t]));
   const tabName = t => (LANG === "fa" ? t.name_fa : t.name);
+  const tabShort = t => (LANG === "fa" ? (t.short_fa || t.name_fa) : t.name);
   const tabLine = t => (LANG === "fa" ? t.line_fa : t.line);
   const icon = k => `<svg viewBox="0 0 24 24" aria-hidden="true">${I[k]}</svg>`;
 
@@ -533,7 +534,7 @@
   }
 
   function renderTabs() {
-    $("#tabs").innerHTML = TABS.map(t => `<a class="tab" href="#/${t.slug}" data-k="${t.key}" style="--c:${cvar(t.key)}">${icon(t.key)}<span>${esc(tabName(t))}</span><span class="nav-tip" role="tooltip"><strong>${esc(tabName(t))}</strong><span>${esc(tabLine(t))}</span></span></a>`).join("");
+    $("#tabs").innerHTML = TABS.map(t => `<a class="tab" href="#/${t.slug}" data-k="${t.key}" style="--c:${cvar(t.key)}">${icon(t.key)}<span>${esc(tabShort(t))}</span><span class="nav-tip" role="tooltip"><strong>${esc(tabName(t))}</strong><span>${esc(tabLine(t))}</span></span></a>`).join("");
     markTab();
   }
   function markTab() {
