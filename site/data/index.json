@@ -1,20 +1,20 @@
 {
- "generated": "2026-11-25T15:26:56Z",
+ "generated": "2026-11-25T17:09:39Z",
  "issues": [
   {
    "week": "2026-W47",
    "number": 10,
    "start": "2026-11-16",
    "end": "2026-11-22",
-   "count": 39,
+   "count": 40,
    "found": {
-    "winners": 14,
-    "valuation": 9,
+    "bubbles": 11,
     "moats": 6,
-    "bubbles": 10
+    "winners": 14,
+    "valuation": 9
    },
    "topics": {
-    "bubbles": 10,
+    "bubbles": 11,
     "moats": 6,
     "winners": 14,
     "valuation": 9
@@ -23,17 +23,18 @@
     "insight": 22,
     "paper": 10,
     "preprint": 2,
-    "report": 5
+    "report": 5,
+    "news": 1
    },
    "horizons": {
     "long_term": 13,
-    "general": 26
+    "general": 27
    },
    "empirical": 14,
    "countries": {
-    "GB": 6,
-    "EC": 1,
+    "GB": 7,
     "NG": 1,
+    "EC": 1,
     "US": 21,
     "FR": 1,
     "TN": 1,
@@ -41,12 +42,12 @@
     "ID": 1
    },
    "methods": {
-    "Event study": 2,
+    "Event study": 3,
     "Long-horizon empirical": 3,
     "Behavioral / Experimental": 7,
+    "Meta-analysis / Review": 1,
     "Simulation": 2,
     "Valuation model": 7,
-    "Meta-analysis / Review": 1,
     "Factor / Cross-sectional": 1,
     "AI & Text mining": 1,
     "Econometric": 1
@@ -83,9 +84,9 @@
    "count": 34,
    "found": {
     "winners": 6,
+    "valuation": 14,
     "bubbles": 9,
-    "moats": 5,
-    "valuation": 14
+    "moats": 5
    },
    "topics": {
     "valuation": 14,
@@ -153,10 +154,10 @@
    "end": "2026-11-08",
    "count": 37,
    "found": {
-    "valuation": 8,
-    "moats": 7,
     "bubbles": 14,
-    "winners": 8
+    "moats": 7,
+    "winners": 8,
+    "valuation": 8
    },
    "topics": {
     "winners": 8,
@@ -209,8 +210,8 @@
     "World Economics and Finance Bulletin": 1,
     "Mohammed V University": 1,
     "Emerald Publishing Limited": 1,
-    "Malque Publishing": 1,
     "African Scientific Journal": 1,
+    "Malque Publishing": 1,
     "Oxford University Press": 1,
     "Morningstar": 1,
     "Behavioural Investment": 1
@@ -225,9 +226,9 @@
    "count": 50,
    "found": {
     "winners": 14,
-    "bubbles": 18,
     "valuation": 11,
-    "moats": 7
+    "moats": 7,
+    "bubbles": 18
    },
    "topics": {
     "winners": 14,
@@ -308,9 +309,9 @@
    "count": 26,
    "found": {
     "bubbles": 7,
+    "valuation": 6,
     "winners": 8,
-    "moats": 5,
-    "valuation": 6
+    "moats": 5
    },
    "topics": {
     "bubbles": 7,
@@ -372,10 +373,10 @@
    "end": "2026-10-18",
    "count": 21,
    "found": {
-    "winners": 7,
-    "moats": 4,
+    "bubbles": 7,
     "valuation": 3,
-    "bubbles": 7
+    "moats": 4,
+    "winners": 7
    },
    "topics": {
     "bubbles": 7,
@@ -437,9 +438,9 @@
    "end": "2026-10-11",
    "count": 35,
    "found": {
-    "moats": 7,
-    "valuation": 12,
     "bubbles": 12,
+    "valuation": 12,
+    "moats": 7,
     "winners": 4
    },
    "topics": {
@@ -507,10 +508,10 @@
    "end": "2026-10-04",
    "count": 54,
    "found": {
-    "valuation": 19,
-    "moats": 3,
+    "bubbles": 21,
     "winners": 11,
-    "bubbles": 21
+    "valuation": 19,
+    "moats": 3
    },
    "topics": {
     "valuation": 19,
@@ -566,9 +567,9 @@
     "Krakow University of Economics": 1,
     "Currency Jurnal Ekonomi dan Perbankan Syariah": 1,
     "Dean & Francis Press": 1,
-    "Plekhanov Russian Economic University": 1,
     "Universitas Tulungagung": 1,
     "Journal of Economics Finance and Management Studies": 1,
+    "Plekhanov Russian Economic University": 1,
     "Minnesota Journal of Business Law and Entrepreneurship": 1,
     "World Scientific": 1,
     "Emerald Publishing Limited": 1,
@@ -585,9 +586,9 @@
    "end": "2026-09-27",
    "count": 21,
    "found": {
-    "moats": 1,
     "bubbles": 10,
     "winners": 5,
+    "moats": 1,
     "valuation": 5
    },
    "topics": {
@@ -609,8 +610,8 @@
    "empirical": 17,
    "countries": {
     "US": 11,
-    "IN": 1,
     "OM": 1,
+    "IN": 1,
     "ID": 1,
     "MA": 1,
     "GB": 1,
@@ -622,26 +623,26 @@
     "Behavioral / Experimental": 8,
     "Econometric": 4,
     "Valuation model": 2,
-    "Event study": 2,
-    "Meta-analysis / Review": 1
+    "Meta-analysis / Review": 1,
+    "Event study": 2
    },
    "publishers": {
     "The Review of Financial Studies": 3,
     "arXiv (q-fin)": 2,
     "Journal of Behavioral Finance": 1,
+    "Vision for Scientific Research and Publishing LTD": 1,
     "Research and Innovation Centre Pro-Akademia": 1,
     "European Organization for Nuclear Research": 1,
-    "Vision for Scientific Research and Publishing LTD": 1,
     "Brawijaya University": 1,
     "Cogent OA": 1,
     "Journal of Advances in Economics and Management Science": 1,
     "The Journal of Finance": 1,
     "Review of Finance": 1,
-    "Financial Analysts Journal": 1,
     "The Journal of Portfolio Management": 1,
+    "Financial Analysts Journal": 1,
     "Counterpoint Global": 1,
-    "CFA Institute Enterprising Investor": 1,
     "Morningstar": 1,
+    "CFA Institute Enterprising Investor": 1,
     "Social Sciences Research Society": 1,
     "Of Dollars And Data": 1
    },
@@ -655,9 +656,9 @@
    "count": 15,
    "found": {
     "valuation": 5,
+    "moats": 1,
     "winners": 3,
-    "bubbles": 6,
-    "moats": 1
+    "bubbles": 6
    },
    "topics": {
     "valuation": 5,
@@ -713,8 +714,8 @@
   "bubbles": "Bubbles & Behavior"
  },
  "totals": {
-  "items": 332,
-  "publishers": 111,
+  "items": 333,
+  "publishers": 112,
   "countries": 39,
   "weeks": 10
  },
@@ -766,79 +767,79 @@
   ]
  },
  "health": {
-  "OpenAlex \"index investing\"": 1,
-  "OpenAlex \"stock selection\" AND \"index\"": 7,
-  "OpenAlex \"wealth creation\" AND \"stock market\"": 1,
-  "OpenAlex \"stock returns\" AND \"skewness\"": 3,
-  "OpenAlex \"active management\" AND \"passive\"": 10,
-  "OpenAlex \"stock picking\" AND performance": 1,
-  "OpenAlex \"long-term stock returns\"": 2,
-  "OpenAlex \"equity risk premium\"": 15,
-  "OpenAlex \"economic moat\"": 1,
+  "OpenAlex \"index investing\"": 0,
+  "OpenAlex \"stock selection\" AND \"index\"": 2,
+  "OpenAlex \"wealth creation\" AND \"stock market\"": 0,
+  "OpenAlex \"stock returns\" AND \"skewness\"": 0,
+  "OpenAlex \"active management\" AND \"passive\"": 1,
+  "OpenAlex \"stock picking\" AND performance": 0,
+  "OpenAlex \"long-term stock returns\"": 0,
+  "OpenAlex \"equity risk premium\"": 1,
+  "OpenAlex \"economic moat\"": 0,
   "OpenAlex \"competitive advantage\" AND \"stock returns\"": 0,
-  "OpenAlex \"return on invested capital\"": 11,
+  "OpenAlex \"return on invested capital\"": 2,
   "OpenAlex \"gross profitability\" AND stocks": 1,
   "OpenAlex \"earnings growth\" AND \"stock returns\"": 0,
   "OpenAlex \"quality factor\" AND equity": 0,
-  "OpenAlex \"capital allocation\" AND shareholders": 12,
-  "OpenAlex \"earnings persistence\" AND valuation": 1,
-  "OpenAlex \"value investing\"": 18,
-  "OpenAlex \"fundamental analysis\" AND stocks": 7,
-  "OpenAlex \"margin of safety\" AND investing": 5,
-  "OpenAlex \"intrinsic value\" AND stock": 11,
+  "OpenAlex \"capital allocation\" AND shareholders": 1,
+  "OpenAlex \"earnings persistence\" AND valuation": 0,
+  "OpenAlex \"value investing\"": 5,
+  "OpenAlex \"fundamental analysis\" AND stocks": 2,
+  "OpenAlex \"margin of safety\" AND investing": 1,
+  "OpenAlex \"intrinsic value\" AND stock": 4,
   "OpenAlex \"free cash flow\" AND \"stock returns\"": 0,
-  "OpenAlex \"price-to-earnings\" AND \"stock returns\"": 4,
-  "OpenAlex \"artificial intelligence\" AND (\"stock returns\" OR \"equity valuation\")": 12,
+  "OpenAlex \"price-to-earnings\" AND \"stock returns\"": 1,
+  "OpenAlex \"artificial intelligence\" AND (\"stock returns\" OR \"equity valuation\")": 1,
   "OpenAlex \"growth stocks\" AND \"value stocks\"": 1,
-  "OpenAlex \"stock market bubble\"": 2,
-  "OpenAlex \"asset price bubble\"": 4,
-  "OpenAlex \"speculative bubble\" AND stock": 2,
-  "OpenAlex \"investor sentiment\" AND \"stock returns\"": 17,
-  "OpenAlex \"behavioral finance\" AND \"stock market\"": 18,
-  "OpenAlex \"overvaluation\" AND \"stock returns\"": 1,
-  "OpenAlex \"market efficiency\" AND anomaly": 9,
-  "OpenAlex \"retail investors\" AND \"stock market\"": 24,
-  "Crossref The Journal of Finance": 24,
-  "Crossref Journal of Financial Economics": 35,
-  "Crossref The Review of Financial Studies": 21,
-  "Crossref Financial Analysts Journal": 9,
-  "Crossref The Journal of Portfolio Management": 33,
-  "Crossref Journal of Behavioral Finance": 3,
-  "Crossref Review of Finance": 14,
-  "Crossref Journal of Corporate Finance": 3,
-  "Crossref Journal of Banking & Finance": 57,
-  "Crossref Review of Asset Pricing Studies": 2,
-  "arXiv #1": 10,
-  "arXiv #2": 18,
-  "arXiv #3": 10,
+  "OpenAlex \"stock market bubble\"": 0,
+  "OpenAlex \"asset price bubble\"": 0,
+  "OpenAlex \"speculative bubble\" AND stock": 0,
+  "OpenAlex \"investor sentiment\" AND \"stock returns\"": 2,
+  "OpenAlex \"behavioral finance\" AND \"stock market\"": 2,
+  "OpenAlex \"overvaluation\" AND \"stock returns\"": 0,
+  "OpenAlex \"market efficiency\" AND anomaly": 1,
+  "OpenAlex \"retail investors\" AND \"stock market\"": 2,
+  "Crossref The Journal of Finance": 0,
+  "Crossref Journal of Financial Economics": 0,
+  "Crossref The Review of Financial Studies": 5,
+  "Crossref Financial Analysts Journal": 2,
+  "Crossref The Journal of Portfolio Management": 5,
+  "Crossref Journal of Behavioral Finance": 0,
+  "Crossref Review of Finance": 2,
+  "Crossref Journal of Corporate Finance": 0,
+  "Crossref Journal of Banking & Finance": 0,
+  "Crossref Review of Asset Pricing Studies": 1,
+  "arXiv #1": 3,
+  "arXiv #2": 6,
+  "arXiv #3": 1,
   "Feed NBER Working Papers": 0,
-  "Feed BIS Working Papers": 20,
-  "Feed Liberty Street Economics (NY Fed)": 24,
-  "Feed Musings on Markets (Damodaran)": 7,
-  "Feed Alpha Architect": 5,
+  "Feed BIS Working Papers": 5,
+  "Feed Liberty Street Economics (NY Fed)": 5,
+  "Feed Musings on Markets (Damodaran)": 2,
+  "Feed Alpha Architect": 2,
   "Feed A Wealth of Common Sense": 10,
-  "Feed Behavioural Investment": 7,
-  "Feed Klement on Investing": 20,
-  "Feed Of Dollars And Data": 10,
-  "Feed Novel Investor": 6,
-  "News NBER Working Papers": 5,
-  "News CFA Institute Enterprising Investor": 1,
+  "Feed Behavioural Investment": 1,
+  "Feed Klement on Investing": 0,
+  "Feed Of Dollars And Data": 2,
+  "Feed Novel Investor": 4,
+  "News NBER Working Papers": 3,
+  "News CFA Institute Enterprising Investor": 0,
   "News Collaborative Fund": 0,
-  "News Counterpoint Global": 9,
+  "News Counterpoint Global": 3,
   "News Oaktree Capital": 2,
   "News AQR Capital Management": 0,
-  "News GMO": 2,
+  "News GMO": 0,
   "News Research Affiliates": 0,
   "News Verdad Research": 0,
-  "News Morningstar": 22,
-  "News Vanguard Research": 5,
-  "News Dimensional Fund Advisors": 3,
+  "News Morningstar": 15,
+  "News Vanguard Research": 0,
+  "News Dimensional Fund Advisors": 1,
   "News Man Institute": 0,
   "News S&P Dow Jones Indices": 4,
-  "News BlackRock Investment Institute": 6,
-  "News Goldman Sachs Research": 19,
+  "News BlackRock Investment Institute": 1,
+  "News Goldman Sachs Research": 14,
   "News Financial Times": 24,
-  "News The Economist": 6,
-  "News Harvard Business Review": 11
+  "News The Economist": 1,
+  "News Harvard Business Review": 8
  }
 }
