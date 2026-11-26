@@ -122,6 +122,23 @@
         (risingLabel ? ` ${risingLabel} is the fastest-rising theme.` : ""),
       upOnLast: d => `, up ${d}% on last week`,
       downOnLast: d => `, down ${Math.abs(d)}% on last week`,
+      cmdPlaceholder: "Smart search across all weeks, Canon, authors, or concepts (EN / FA)…",
+      cmdScopeAll: "All archive",
+      cmdScopeCanon: "★ Canon",
+      cmdScopeLong: "Long-Horizon",
+      cmdScopeEmp: "Empirical",
+      cmdLoading: "Indexing full research archive…",
+      cmdSuggested: "Try searching a concept or investor",
+      cmdFeatured: "Canon foundations & this week's highlights",
+      cmdResults: (n, tot) => `${n} smart matches across ${tot} works`,
+      cmdExpanded: "Smart concepts matched:",
+      cmdNoMatch: "No papers matched that query.",
+      cmdNoMatchHint: "Try broader terms like AI bubble, Margin of Safety, Bessembinder, ROIC, or switch to All archive.",
+      cmdFootArchive: (w, n) => `${n} works · ${w} weeks + Canon`,
+      cmdKeyNav: "Navigate",
+      cmdKeyOpen: "Open",
+      cmdKeyClose: "Close",
+      cmdPrompts: ["AI bubbles", "Bessembinder skewness", "Economic Moat & ROIC", "Margin of Safety", "Stock picking vs index", "Howard Marks cycles", "10-year compounding"],
     },
     fa: {
       siteTitle: "Market Research Hub — رصدخانه پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی",
@@ -238,6 +255,23 @@
         (risingLabel ? ` داغ‌ترین محور صعودی هفته: ${risingLabel}.` : ""),
       upOnLast: d => ` (رشد ${d}٪ نسبت به هفته قبل)`,
       downOnLast: d => ` (کاهش ${Math.abs(d)}٪ نسبت به هفته قبل)`,
+      cmdPlaceholder: "جستجوی هوشمند فارسی یا انگلیسی در کل آرشیو و آثار Canon...",
+      cmdScopeAll: "کل آرشیو",
+      cmdScopeCanon: "★ آثار ماندگار",
+      cmdScopeLong: "افق بلندمدت",
+      cmdScopeEmp: "شواهد Empirical",
+      cmdLoading: "در حال نمایه‌سازی کل آرشیو پژوهش‌ها...",
+      cmdSuggested: "جستجوهای پیشنهادی (فارسی یا انگلیسی)",
+      cmdFeatured: "آثار پایه‌ای Canon و برگزیده‌های هفته",
+      cmdResults: (n, tot) => `${n} نتیجه مرتبط در میان ${tot} پژوهش`,
+      cmdExpanded: "مفاهیم هم‌معنا در جستجو:",
+      cmdNoMatch: "پژوهشی با این جستجو یافت نشد.",
+      cmdNoMatchHint: "عبارت ساده‌تری مثل «حباب هوش مصنوعی»، «حاشیه ایمنی»، «تک‌سهم»، «بافت» یا «ROIC» را امتحان کنید.",
+      cmdFootArchive: (w, n) => `${n} پژوهش · ${w} هفته + قفسه Canon`,
+      cmdKeyNav: "حرکت",
+      cmdKeyOpen: "باز کردن",
+      cmdKeyClose: "بستن",
+      cmdPrompts: ["حباب هوش مصنوعی", "حاشیه ایمنی و بافت", "تک‌سهم در برابر شاخص", "مزیت رقابتی و ROIC", "سود مرکب بلندمدت", "مالی رفتاری و چرخه‌ها", "پیتر لینچ"],
     },
   };
 
@@ -1729,6 +1763,322 @@
   }
   const slugify = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+  // ---------- Global Bilingual Smart Search (Client-Side, Zero-Cost) ----------
+  const SMART_CONCEPTS = [
+    { keys: ["هوش مصنوعی", "ای ای", "تکنولوژی", "فناوری", "کاپکس", "ai", "artificial intelligence", "llm", "generative", "tech", "capex"],
+      exp: ["ai", "artificial intelligence", "generative", "llm", "tech", "capex", "innovation", "hype"] },
+    { keys: ["حباب", "حباب قیمتی", "سقوط", "کرش", "هیجان", "سفته بازی", "bubble", "bubbles", "crash", "mania", "exuberance", "boom"],
+      exp: ["bubble", "bubbles", "crash", "fama", "greenwood", "shleifer", "speculative", "mania", "exuberance", "shiller"] },
+    { keys: ["حاشیه ایمنی", "ارزش گذاری", "ارزش ذاتی", "ارزشی", "زیر ارزش", "ارزان", "گران", "valuation", "margin of safety", "intrinsic", "dcf", "multiple", "value investing"],
+      exp: ["valuation", "margin of safety", "intrinsic", "value", "undervalued", "multiple", "graham", "damodaran", "dcf"] },
+    { keys: ["مزیت رقابتی", "خندق", "موت", "کیفیت", "قدرت قیمت گذاری", "انحصار", "بازده سرمایه", "سوداوری", "moat", "quality", "roic", "pricing power", "profitability"],
+      exp: ["moat", "competitive advantage", "quality", "roic", "return on invested", "pricing power", "switching", "profitability", "gross profit", "mauboussin", "novy-marx"] },
+    { keys: ["تک سهم", "انتخاب سهم", "شاخص", "شاخصی", "ایندکس", "چولگی", "اسکیونس", "برنده", "اوراق خزانه", "بسمبر", "بسمبیندر", "بسمدیندر", "skewness", "bessembinder", "index", "indexing", "passive", "spiva", "stock picking", "stock selection", "etf", "s&p"],
+      exp: ["bessembinder", "skewness", "index", "indexing", "passive", "etf", "s&p", "stock selection", "stock picking", "spiva", "treasury bills", "wealth creation", "winner"] },
+    { keys: ["بلندمدت", "سود مرکب", "مرکب", "افق بلندمدت", "ده ساله", "پنج ساله", "تنبگر", "صبر", "compounding", "compound", "snowball", "long term", "long horizon", "tenbagger", "10-year"],
+      exp: ["compound", "compounding", "long-term", "long-horizon", "10-year", "5-year", "snowball", "tenbagger", "lynch", "patience"] },
+    { keys: ["بافت", "وارن بافت", "برکشایر", "buffett", "berkshire"],
+      exp: ["buffett", "berkshire", "margin of safety", "moat", "owner"] },
+    { keys: ["مانگر", "چارلی مانگر", "munger"],
+      exp: ["munger", "buffett", "quality", "compound"] },
+    { keys: ["مارکس", "هاوارد مارکس", "اوکتری", "marks", "oaktree"],
+      exp: ["howard marks", "oaktree", "cycle", "pendulum", "second-level"] },
+    { keys: ["گراهام", "بنجامین گراهام", "graham"],
+      exp: ["graham", "mr. market", "margin of safety", "intelligent investor"] },
+    { keys: ["موبوسین", "مابوسین", "mauboussin"],
+      exp: ["mauboussin", "base rate", "counterpoint", "roic", "expectations"] },
+    { keys: ["داموداران", "دامودران", "damodaran"],
+      exp: ["damodaran", "valuation", "narrative", "numbers"] },
+    { keys: ["شیلر", "رابرت شیلر", "shiller"],
+      exp: ["shiller", "cape", "exuberance", "bubble"] },
+    { keys: ["فاما", "فرنچ", "fama", "french"],
+      exp: ["fama", "french", "factor", "bubbles for fama", "cross-section"] },
+    { keys: ["لینچ", "پیتر لینچ", "lynch"],
+      exp: ["lynch", "tenbagger", "earnings", "wall street"] },
+    { keys: ["رفتاری", "روانشناسی", "مالی رفتاری", "ترس", "طمع", "چرخه", "سیکل", "تورش", "فومو", "behavioral", "behavioural", "sentiment", "cycle", "bias", "fear", "greed"],
+      exp: ["behavioral", "behavioural", "sentiment", "cycle", "pendulum", "bias", "herding", "overconfidence", "fear", "greed", "marks"] },
+    { keys: ["سود تقسیمی", "دیویدند", "بازخرید", "تخصیص سرمایه", "dividend", "buyback", "capital allocation"],
+      exp: ["dividend", "buyback", "repurchase", "capital allocation", "payout"] },
+    { keys: ["سود هر سهم", "درامد", "جریان نقد", "eps", "earnings", "fcf", "cash flow"],
+      exp: ["eps", "earnings", "free cash flow", "fcf", "cash flow", "base rate"] },
+    { keys: ["فاکتور", "مومنتوم", "آلفا", "الفا", "factor", "momentum", "alpha", "aqr"],
+      exp: ["factor", "momentum", "value", "size", "alpha", "premium", "fama", "aqr"] },
+    { keys: ["ریسک", "نوسان", "افت", "دراودان", "risk", "volatility", "drawdown", "uncertainty"],
+      exp: ["risk", "volatility", "drawdown", "uncertainty", "downside", "resilience"] },
+  ];
+  const FA_DIGITS = { "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9", "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4", "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9" };
+  const normText = s => String(s || "")
+    .toLowerCase()
+    .replace(/[۰-۹٠-٩]/g, ch => FA_DIGITS[ch] || ch)
+    .replace(/[يی]/g, "ی").replace(/[كک]/g, "ک").replace(/[آأإ]/g, "ا").replace(/ة/g, "ه")
+    .replace(/[\u064b-\u065f\u0670]/g, "")
+    .replace(/[\u200c\u200d\u200e\u200f]/g, " ")
+    .replace(/[^a-z0-9\u0600-\u06ff&+\-.]+/g, " ")
+    .replace(/\s+/g, " ").trim();
+
+  function nearWord(a, b, maxD) {
+    if (Math.abs(a.length - b.length) > maxD) return false;
+    let i = 0, j = 0, edits = 0;
+    while (i < a.length && j < b.length) {
+      if (a[i] === b[j]) { i++; j++; continue; }
+      edits++;
+      if (edits > maxD) return false;
+      if (a.length > b.length) i++;
+      else if (b.length > a.length) j++;
+      else { i++; j++; }
+    }
+    return edits + (a.length - i) + (b.length - j) <= maxD;
+  }
+
+  function expandQuery(raw) {
+    const clean = normText(raw);
+    if (!clean) return { clean: "", tokens: [], expanded: [], matchedConcepts: [] };
+    const tokens = clean.split(" ").filter(t => t.length >= 2);
+    const expSet = new Set(), matched = [];
+    for (const c of SMART_CONCEPTS) {
+      const hit = c.keys.some(k => {
+        const nk = normText(k);
+        return clean.includes(nk) || tokens.some(t => t.length >= 4 && nk.length >= 4 && (t === nk || nearWord(t, nk, 1)));
+      });
+      if (hit) {
+        c.exp.forEach(e => {
+          const ne = normText(e);
+          if (!tokens.includes(ne) && !clean.includes(ne)) expSet.add(e);
+        });
+        matched.push(...c.exp.slice(0, 3));
+      }
+    }
+    return {
+      clean,
+      tokens,
+      expanded: [...expSet],
+      matchedConcepts: [...new Set(matched)].slice(0, 6),
+    };
+  }
+
+  const CMD = { docs: null, loading: null, scope: "all", q: "", results: [], sel: 0, lastFocus: null, trackT: 0 };
+
+  async function ensureSearchIndex() {
+    if (CMD.docs) return CMD.docs;
+    if (CMD.loading) return CMD.loading;
+    CMD.loading = (async () => {
+      const issues = await allIssues();
+      const seen = new Set(), out = [];
+      const addDoc = (it, weekMeta) => {
+        if (!it || !it.id || seen.has(it.id)) return;
+        seen.add(it.id);
+        const tab = BY_KEY[it.topic];
+        const ths = themesOf(it);
+        const thStr = ths.map(k => (THEME_LABELS[k] || [k]).join(" ")).join(" ");
+        const ctStr = (it.countries || []).map(c => `${c} ${(REGION_EN && REGION_EN.of(c)) || ""} ${(REGION_FA && REGION_FA.of(c)) || ""}`).join(" ");
+        const title = normText(it.title);
+        const titleFa = normText(it.title_fa);
+        const authors = normText((it.authors || []).join(" "));
+        const publisher = normText(pub(it.publisher) + " " + (it.venue || ""));
+        const finding = normText([it.stat_en, it.stat_fa, it.finding, it.finding_en, it.finding_fa, it.takeaway_en, it.takeaway_fa].filter(Boolean).join(" "));
+        const summary = normText([it.summary, it.summary_fa, tab?.name, tab?.name_fa, thStr, ctStr, it.year, it.date, (it.methods || []).join(" ")].filter(Boolean).join(" "));
+        const all = `${title} ${titleFa} ${authors} ${publisher} ${finding} ${summary}`;
+        const words = [...new Set(all.split(" ").filter(w => w.length >= 4))];
+        out.push({
+          it,
+          week: weekMeta ? weekMeta.week : null,
+          weekStart: weekMeta ? weekMeta.start : null,
+          weekEnd: weekMeta ? weekMeta.end : null,
+          title, titleFa, authors, publisher, finding, summary, all, words,
+          boost: it.canon ? 14 : Math.min(10, (it.score || 0) * 0.15) + (it.horizon === "long_term" ? 2 : 0),
+        });
+      };
+      state.canon.forEach(it => addDoc(it, null));
+      issues.forEach((iss, i) => {
+        const meta = state.index.issues[i];
+        (iss.items || []).forEach(it => addDoc(it, meta));
+      });
+      CMD.docs = out;
+      return out;
+    })();
+    return CMD.loading;
+  }
+
+  function scoreDoc(d, q) {
+    let sc = 0, directHits = 0;
+    if (q.clean.length >= 3) {
+      if (d.title.includes(q.clean) || d.titleFa.includes(q.clean)) { sc += 48; directHits++; }
+      else if (d.authors.includes(q.clean)) { sc += 36; directHits++; }
+      else if (d.finding.includes(q.clean)) { sc += 26; directHits++; }
+      else if (d.summary.includes(q.clean)) { sc += 16; directHits++; }
+    }
+    for (const tok of q.tokens) {
+      let hit = 0;
+      if (d.title.includes(tok) || d.titleFa.includes(tok)) hit = Math.max(hit, 20);
+      if (d.authors.includes(tok)) hit = Math.max(hit, 16);
+      if (d.publisher.includes(tok)) hit = Math.max(hit, 12);
+      if (d.finding.includes(tok)) hit = Math.max(hit, 11);
+      if (d.summary.includes(tok)) hit = Math.max(hit, 7);
+      if (!hit && tok.length >= 5) {
+        const md = tok.length >= 8 ? 2 : 1;
+        if (d.words.some(w => nearWord(tok, w, md))) hit = 8;
+      }
+      if (hit) { sc += hit; directHits++; }
+    }
+    let expHits = 0;
+    for (const e of q.expanded) {
+      const ne = normText(e);
+      if (!ne) continue;
+      if (d.title.includes(ne)) { sc += 12; expHits++; }
+      else if (d.authors.includes(ne)) { sc += 11; expHits++; }
+      else if (d.finding.includes(ne)) { sc += 8; expHits++; }
+      else if (d.summary.includes(ne)) { sc += 5; expHits++; }
+    }
+    if (!directHits && !expHits) return 0;
+    if (q.tokens.length > 1 && directHits >= q.tokens.length) sc += 14;
+    return sc + d.boost;
+  }
+
+  function hiText(text, terms) {
+    const safe = esc(text || "");
+    if (!terms.length || !safe) return safe;
+    const pat = terms.filter(t => t.length >= 2).slice(0, 8).map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    if (!pat) return safe;
+    try { return safe.replace(new RegExp(`(${pat})`, "gi"), "<mark>$1</mark>"); } catch (e) { return safe; }
+  }
+
+  function renderCmdFilters() {
+    const box = $("#cmdFilters");
+    if (!box) return;
+    const scopes = [
+      ["all", T("cmdScopeAll")],
+      ["canon", T("cmdScopeCanon")],
+      ["long_term", T("cmdScopeLong")],
+      ["empirical", T("cmdScopeEmp")],
+    ];
+    box.innerHTML = scopes.map(([k, lbl]) => `<button class="cmd-chip" type="button" data-cscope="${k}" aria-pressed="${CMD.scope === k}">${esc(lbl)}</button>`).join("");
+  }
+
+  function renderCmdBody() {
+    const body = $("#cmdBody"), expBox = $("#cmdExpand"), foot = $("#cmdFoot");
+    if (!body) return;
+    const docs = CMD.docs;
+    if (!docs) {
+      body.innerHTML = `<div class="cmd-empty">${T("cmdLoading")}</div>`;
+      return;
+    }
+    const scoped = docs.filter(d =>
+      CMD.scope === "all" ? true
+        : CMD.scope === "canon" ? d.it.canon
+          : CMD.scope === "long_term" ? d.it.horizon === "long_term"
+            : d.it.empirical
+    );
+    const q = expandQuery(CMD.q);
+    let list = [];
+    if (!q.clean) {
+      expBox.hidden = true;
+      const canonTop = scoped.filter(d => d.it.canon).slice(0, 4);
+      const latestW = state.index?.issues?.[0]?.week;
+      const weekTop = scoped.filter(d => !d.it.canon && d.week === latestW).slice(0, 4);
+      const fill = [...canonTop, ...weekTop];
+      list = fill.length ? fill : scoped.slice(0, 8);
+    } else {
+      if (q.matchedConcepts.length) {
+        expBox.hidden = false;
+        expBox.innerHTML = `<b>${T("cmdExpanded")}</b>${q.matchedConcepts.map(c => `<i>${esc(c)}</i>`).join("")}`;
+      } else {
+        expBox.hidden = true;
+      }
+      list = scoped
+        .map(d => ({ d, sc: scoreDoc(d, q) }))
+        .filter(x => x.sc > 0)
+        .sort((a, b) => b.sc - a.sc)
+        .slice(0, 24)
+        .map(x => x.d);
+    }
+    CMD.results = list;
+    CMD.sel = Math.min(CMD.sel, Math.max(0, list.length - 1));
+
+    const hiTerms = [...q.tokens, ...q.expanded.slice(0, 5)];
+    const renderItem = (d, i) => {
+      const it = d.it, tab = BY_KEY[it.topic];
+      const snipRaw = it.canon
+        ? (LANG === "fa" ? (it.stat_fa || it.finding_fa || it.stat_en) : (it.stat_en || it.finding_en))
+        : (it.finding || it.summary || "");
+      const wkLabel = it.canon ? `${T("canonBadge")} · ${it.year}` : (d.weekStart ? fmtRange(d.weekStart, d.weekEnd) : fmtDay(it.date));
+      return `<li><button class="cmd-item${i === CMD.sel ? " sel" : ""}" type="button" role="option" aria-selected="${i === CMD.sel}" data-cmd-idx="${i}" style="--c:${cvar(it.topic)}">
+        <span class="kg"><svg viewBox="75 470 324 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${panel(it, scene(it))}</svg></span>
+        <span class="cmd-txt">
+          <span class="cmd-top"><span>${esc(tab ? tabName(tab) : "")}</span><span class="cmd-wk">· ${esc(wkLabel)}</span></span>
+          <span class="cmd-t">${hiText(it.title, hiTerms)}</span>
+          ${LANG === "fa" && it.title_fa ? `<span class="cmd-t-fa">${hiText(it.title_fa, hiTerms)}</span>` : ""}
+          ${snipRaw ? `<span class="cmd-snip" dir="auto">${hiText(trim(snipRaw, 155), hiTerms)}</span>` : ""}
+          <span class="cmd-meta">${pubTag(it.publisher, 30)}${(it.authors || []).length ? ` · <span class="en">${esc(trim(it.authors.slice(0, 2).join(", "), 34))}</span>` : ""}</span>
+        </span>
+        <span class="cmd-tags">
+          ${it.horizon === "long_term" ? `<span class="tag-pill lt">${T("longHorizonBadge")}</span>` : ""}
+          ${it.empirical ? `<span class="tag-pill">${T("empiricalBadge")}</span>` : ""}
+        </span>
+      </button></li>`;
+    };
+
+    let html = "";
+    if (!q.clean) {
+      const prompts = T("cmdPrompts") || [];
+      html += `<div class="cmd-sec-h"><span>${T("cmdSuggested")}</span></div>
+        <div class="cmd-prompts">${prompts.map(p => `<button class="cmd-prompt" type="button" data-cprompt="${esc(p)}">${esc(p)}</button>`).join("")}</div>
+        <div class="cmd-sec-h"><span>${T("cmdFeatured")}</span></div>`;
+    } else {
+      html += `<div class="cmd-sec-h"><span>${T("cmdResults", list.length, scoped.length)}</span></div>`;
+    }
+    if (!list.length) {
+      html += `<div class="cmd-empty"><strong>${T("cmdNoMatch")}</strong><p>${T("cmdNoMatchHint")}</p></div>`;
+    } else {
+      html += `<ul class="cmd-list">${list.map(renderItem).join("")}</ul>`;
+    }
+    body.innerHTML = html;
+    foot.innerHTML = `<span>${T("cmdFootArchive", state.index?.issues?.length || 0, docs.length)}</span>
+      <span class="cmd-keys"><span><kbd>↑</kbd><kbd>↓</kbd>${T("cmdKeyNav")}</span><span><kbd>↵</kbd>${T("cmdKeyOpen")}</span><span><kbd>ESC</kbd>${T("cmdKeyClose")}</span></span>`;
+  }
+
+  async function openSmartSearch(initialQ) {
+    const modal = $("#searchModal");
+    if (!modal) return;
+    CMD.lastFocus = document.activeElement;
+    if (typeof initialQ === "string") CMD.q = initialQ;
+    const inp = $("#cmdInput");
+    inp.placeholder = T("cmdPlaceholder");
+    inp.value = CMD.q;
+    $("#cmdClear").hidden = !CMD.q;
+    renderCmdFilters();
+    modal.hidden = false;
+    document.body.classList.add("cmd-open");
+    renderCmdBody();
+    inp.focus();
+    inp.select();
+    await ensureSearchIndex();
+    if (!modal.hidden) renderCmdBody();
+  }
+  function closeSmartSearch(restoreFocus = true) {
+    const modal = $("#searchModal");
+    if (!modal || modal.hidden) return;
+    modal.hidden = true;
+    document.body.classList.remove("cmd-open");
+    if (restoreFocus && CMD.lastFocus && document.contains(CMD.lastFocus)) CMD.lastFocus.focus({ preventScroll: true });
+  }
+  function openCmdSelection(i) {
+    const d = CMD.results[i];
+    if (!d) return;
+    trackEvent("smart_search_open", { topic: d.it.topic, canon: Boolean(d.it.canon), lang: LANG });
+    closeSmartSearch(false);
+    openSheet(d.it, null);
+  }
+  function syncCmdSel() {
+    const body = $("#cmdBody");
+    if (!body) return;
+    body.querySelectorAll(".cmd-item").forEach((el, i) => {
+      const on = i === CMD.sel;
+      el.classList.toggle("sel", on);
+      el.setAttribute("aria-selected", String(on));
+      if (on) el.scrollIntoView({ block: "nearest" });
+    });
+  }
+
   // ---------- Events, Theme, Language & Boot ----------
   function bind() {
     document.addEventListener("click", e => {
@@ -1754,15 +2104,48 @@
       if (e.target.closest("[data-mapm]")) { const b = e.target.closest("[data-mapm]"); b.parentElement.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); return mountMap($("#map"), b.dataset.mapm); }
       if (e.target.closest("#more")) { state.shown += 20; return renderRows(); }
       if (e.target.closest("#clear")) { state.kind = "all"; state.longHorizon = false; state.empirical = false; state.q = ""; const q = $("#q"); if (q) q.value = ""; return renderRows(); }
+      if (e.target.closest("#openSearch")) return openSmartSearch();
+      if (e.target === $("#searchModal") || e.target.closest("#cmdClose")) return closeSmartSearch();
+      if (e.target.closest("#cmdClear")) { CMD.q = ""; CMD.sel = 0; const inp = $("#cmdInput"); if (inp) { inp.value = ""; inp.focus(); } $("#cmdClear").hidden = true; return renderCmdBody(); }
+      const csc = e.target.closest("[data-cscope]");
+      if (csc) { CMD.scope = csc.dataset.cscope; CMD.sel = 0; renderCmdFilters(); return renderCmdBody(); }
+      const cpr = e.target.closest("[data-cprompt]");
+      if (cpr) { CMD.q = cpr.dataset.cprompt; CMD.sel = 0; const inp = $("#cmdInput"); if (inp) { inp.value = CMD.q; inp.focus(); } $("#cmdClear").hidden = false; return renderCmdBody(); }
+      const cidx = e.target.closest("[data-cmd-idx]");
+      if (cidx) return openCmdSelection(+cidx.dataset.cmdIdx);
       if (e.target.closest("#sClose")) closeSheet();
     });
-    document.addEventListener("input", e => { if (e.target.id === "q") { state.q = e.target.value; state.shown = 20; renderRows(); } });
+    document.addEventListener("input", e => {
+      if (e.target.id === "q") { state.q = e.target.value; state.shown = 20; renderRows(); }
+      if (e.target.id === "cmdInput") {
+        CMD.q = e.target.value; CMD.sel = 0;
+        $("#cmdClear").hidden = !CMD.q;
+        renderCmdBody();
+        clearTimeout(CMD.trackT);
+        if (CMD.q.trim().length >= 2) CMD.trackT = setTimeout(() => trackEvent("smart_search", { lang: LANG, scope: CMD.scope, results: CMD.results.length }), 700);
+      }
+    });
     document.addEventListener("keydown", e => {
+      const cmdOpen = !$("#searchModal").hidden;
       const open = !$("#sheet").hidden;
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        if (cmdOpen) closeSmartSearch();
+        else openSmartSearch();
+        return;
+      }
+      if (cmdOpen) {
+        if (e.key === "Escape") { e.preventDefault(); closeSmartSearch(); return; }
+        if (e.key === "ArrowDown" && CMD.results.length) { e.preventDefault(); CMD.sel = (CMD.sel + 1) % CMD.results.length; syncCmdSel(); return; }
+        if (e.key === "ArrowUp" && CMD.results.length) { e.preventDefault(); CMD.sel = (CMD.sel - 1 + CMD.results.length) % CMD.results.length; syncCmdSel(); return; }
+        if (e.key === "Enter" && CMD.results.length) { e.preventDefault(); openCmdSelection(CMD.sel); return; }
+        return;
+      }
+      const typing = /INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
+      if (e.key === "/" && !open && !typing && !$(".reel")) { e.preventDefault(); openSmartSearch(); return; }
       if (e.key === "Escape" && open) { closeSheet(); return; }
       const slot = e.target.closest && e.target.closest("[data-week]");
       if (slot && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pickWeek(slot.dataset.week); return; }
-      const typing = /INPUT|TEXTAREA|SELECT/.test(e.target.tagName);
       if (!open && !typing && SH.api && SH.api.inView()) {
         if (e.key === "ArrowLeft") { e.preventDefault(); SH.api.step(-1); }
         else if (e.key === "ArrowRight") { e.preventDefault(); SH.api.step(1); }
