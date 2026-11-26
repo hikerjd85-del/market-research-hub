@@ -122,23 +122,23 @@
         (risingLabel ? ` ${risingLabel} is the fastest-rising theme.` : ""),
       upOnLast: d => `, up ${d}% on last week`,
       downOnLast: d => `, down ${Math.abs(d)}% on last week`,
-      cmdPlaceholder: "Smart search across all weeks, Canon, authors, or concepts (EN / FA)…",
+      cmdPlaceholder: "Search papers, companies, tickers (NVDA, BRK.B, SPY), or concepts (EN / FA)…",
       cmdScopeAll: "All archive",
       cmdScopeCanon: "★ Canon",
       cmdScopeLong: "Long-Horizon",
       cmdScopeEmp: "Empirical",
       cmdLoading: "Indexing full research archive…",
-      cmdSuggested: "Try searching a concept or investor",
+      cmdSuggested: "Try searching a ticker, company, investor, or concept",
       cmdFeatured: "Canon foundations & this week's highlights",
       cmdResults: (n, tot) => `${n} smart matches across ${tot} works`,
-      cmdExpanded: "Smart concepts matched:",
+      cmdExpanded: "Smart match:",
       cmdNoMatch: "No papers matched that query.",
-      cmdNoMatchHint: "Try broader terms like AI bubble, Margin of Safety, Bessembinder, ROIC, or switch to All archive.",
+      cmdNoMatchHint: "Try tickers like NVDA, BRK.B, GOOGL, SPY or concepts like AI bubble, Margin of Safety, Bessembinder, ROIC.",
       cmdFootArchive: (w, n) => `${n} works · ${w} weeks + Canon`,
       cmdKeyNav: "Navigate",
       cmdKeyOpen: "Open",
       cmdKeyClose: "Close",
-      cmdPrompts: ["AI bubbles", "Bessembinder skewness", "Economic Moat & ROIC", "Margin of Safety", "Stock picking vs index", "Howard Marks cycles", "10-year compounding"],
+      cmdPrompts: ["NVDA", "BRK.B", "AI bubbles", "SPY / S&P 500", "Bessembinder skewness", "Economic Moat & ROIC", "Margin of Safety"],
     },
     fa: {
       siteTitle: "Market Research Hub — رصدخانه پژوهش‌های بازار سهام و سرمایه‌گذاری بنیادی",
@@ -255,23 +255,23 @@
         (risingLabel ? ` داغ‌ترین محور صعودی هفته: ${risingLabel}.` : ""),
       upOnLast: d => ` (رشد ${d}٪ نسبت به هفته قبل)`,
       downOnLast: d => ` (کاهش ${Math.abs(d)}٪ نسبت به هفته قبل)`,
-      cmdPlaceholder: "جستجوی هوشمند فارسی یا انگلیسی در کل آرشیو و آثار Canon...",
+      cmdPlaceholder: "جستجو در مقالات، نام شرکت‌ها، تیکرها (NVDA, BRK.B, SPY) یا مفاهیم...",
       cmdScopeAll: "کل آرشیو",
       cmdScopeCanon: "★ آثار ماندگار",
       cmdScopeLong: "افق بلندمدت",
       cmdScopeEmp: "شواهد Empirical",
       cmdLoading: "در حال نمایه‌سازی کل آرشیو پژوهش‌ها...",
-      cmdSuggested: "جستجوهای پیشنهادی (فارسی یا انگلیسی)",
+      cmdSuggested: "پیشنهادها (تیکر سهام، نام شرکت یا مفهوم مالی)",
       cmdFeatured: "آثار پایه‌ای Canon و برگزیده‌های هفته",
       cmdResults: (n, tot) => `${n} نتیجه مرتبط در میان ${tot} پژوهش`,
-      cmdExpanded: "مفاهیم هم‌معنا در جستجو:",
+      cmdExpanded: "تطبیق هوشمند:",
       cmdNoMatch: "پژوهشی با این جستجو یافت نشد.",
-      cmdNoMatchHint: "عبارت ساده‌تری مثل «حباب هوش مصنوعی»، «حاشیه ایمنی»، «تک‌سهم»، «بافت» یا «ROIC» را امتحان کنید.",
+      cmdNoMatchHint: "تیکرهایی مثل NVDA، BRK.B، GOOGL، SPY یا عباراتی مثل «حباب هوش مصنوعی»، «حاشیه ایمنی» یا «ROIC» را امتحان کنید.",
       cmdFootArchive: (w, n) => `${n} پژوهش · ${w} هفته + قفسه Canon`,
       cmdKeyNav: "حرکت",
       cmdKeyOpen: "باز کردن",
       cmdKeyClose: "بستن",
-      cmdPrompts: ["حباب هوش مصنوعی", "حاشیه ایمنی و بافت", "تک‌سهم در برابر شاخص", "مزیت رقابتی و ROIC", "سود مرکب بلندمدت", "مالی رفتاری و چرخه‌ها", "پیتر لینچ"],
+      cmdPrompts: ["NVDA", "BRK.B", "حباب هوش مصنوعی", "SPY", "حاشیه ایمنی و بافت", "تک‌سهم در برابر شاخص", "مزیت رقابتی و ROIC"],
     },
   };
 
@@ -1763,7 +1763,69 @@
   }
   const slugify = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-  // ---------- Global Bilingual Smart Search (Client-Side, Zero-Cost) ----------
+  // ---------- Global Bilingual Smart Search (Companies, Tickers & Concepts) ----------
+  // [ticker, label, aliases (tickers + EN/FA names), primaryTerms (exact company boost), themeTerms (sector fallback)]
+  const AMBIG_TICKERS = new Set(["cost", "arm", "coin", "meta", "ma", "ms", "v", "c", "f", "t", "cat", "all", "now", "low", "on", "so"]);
+  const SMART_TICKERS = [
+    ["NVDA", "Nvidia", ["nvda", "nvidia", "انویدیا", "جنسن هوانگ", "jensen huang"], ["nvidia", "nvda", "jensen huang"], ["semiconductor", "gpu", "ai", "capex"]],
+    ["AAPL", "Apple", ["aapl", "apple", "اپل"], ["apple", "aapl"], ["big tech", "buyback", "moat"]],
+    ["MSFT", "Microsoft", ["msft", "microsoft", "مایکروسافت"], ["microsoft", "msft"], ["cloud", "ai", "big tech"]],
+    ["GOOGL", "Alphabet / Google", ["googl", "goog", "alphabet", "google", "گوگل", "الفابت"], ["alphabet", "google", "googl"], ["ai", "big tech", "moat"]],
+    ["AMZN", "Amazon", ["amzn", "amazon", "aws", "امازون"], ["amazon", "amzn", "aws"], ["cloud", "big tech", "moat"]],
+    ["META", "Meta Platforms", ["meta", "facebook", "متا", "فیسبوک"], ["meta", "facebook"], ["ai", "capex", "social media"]],
+    ["TSLA", "Tesla", ["tsla", "tesla", "تسلا", "ایلان ماسک", "elon musk"], ["tesla", "tsla", "elon musk"], ["electric vehicle", "valuation", "bubble"]],
+    ["BRK.B", "Berkshire Hathaway", ["brk", "brk.b", "brk.a", "brk-b", "brk-a", "berkshire", "berkshire hathaway", "برکشایر"], ["berkshire", "berkshire hathaway", "buffett"], ["margin of safety", "moat", "capital allocation"]],
+    ["MU", "Micron Technology", ["mu", "micron", "micron technology", "میکرون"], ["micron", "micron technology", "mu"], ["semiconductor", "chip", "ai", "memory"]],
+    ["AMD", "AMD", ["amd", "advanced micro devices", "ای ام دی"], ["amd", "advanced micro devices"], ["semiconductor", "chip", "ai"]],
+    ["AVGO", "Broadcom", ["avgo", "broadcom", "برودکام"], ["broadcom", "avgo"], ["semiconductor", "chip", "ai"]],
+    ["TSM", "TSMC", ["tsm", "tsmc", "taiwan semiconductor", "تی اس ام سی"], ["tsmc", "taiwan semiconductor", "tsm"], ["semiconductor", "chip", "moat"]],
+    ["ASML", "ASML", ["asml"], ["asml"], ["semiconductor", "moat"]],
+    ["INTC", "Intel", ["intc", "intel", "اینتل"], ["intel", "intc"], ["semiconductor", "chip"]],
+    ["ARM", "Arm Holdings", ["arm", "arm holdings"], ["arm holdings", "arm"], ["semiconductor", "chip", "ai"]],
+    ["ORCL", "Oracle", ["orcl", "oracle", "اوراکل"], ["oracle", "orcl"], ["cloud", "ai", "software"]],
+    ["PLTR", "Palantir", ["pltr", "palantir", "پالانتیر"], ["palantir", "pltr"], ["ai", "valuation", "software"]],
+    ["NFLX", "Netflix", ["nflx", "netflix", "نتفلیکس"], ["netflix", "nflx"], ["streaming", "moat", "compound"]],
+    ["CRM", "Salesforce", ["crm", "salesforce"], ["salesforce", "crm"], ["software", "cloud", "ai"]],
+    ["ADBE", "Adobe", ["adbe", "adobe", "ادوبی"], ["adobe", "adbe"], ["software", "moat", "ai"]],
+    ["UBER", "Uber", ["uber", "اوبر"], ["uber"], ["network effect", "platform", "growth"]],
+    ["SMCI", "Super Micro", ["smci", "super micro", "supermicro"], ["super micro", "supermicro", "smci"], ["ai", "capex"]],
+    ["OPENAI", "OpenAI", ["openai", "chatgpt", "اوپن ای ای"], ["openai", "chatgpt"], ["generative", "ai", "llm", "bubble"]],
+    ["JPM", "JPMorgan Chase", ["jpm", "jpmorgan", "jp morgan", "جی پی مورگان"], ["jpmorgan", "jp morgan", "jpm"], ["bank", "banking", "credit"]],
+    ["GS", "Goldman Sachs", ["gs", "goldman", "goldman sachs", "گلدمن ساکس"], ["goldman sachs", "goldman"], ["bank", "investment"]],
+    ["MS", "Morgan Stanley", ["ms", "morgan stanley", "مورگان استنلی"], ["morgan stanley", "counterpoint global"], ["mauboussin", "bank"]],
+    ["BLK", "BlackRock", ["blk", "blackrock", "بلک راک"], ["blackrock", "blk"], ["etf", "index", "asset management"]],
+    ["BAC", "Bank of America", ["bac", "bank of america"], ["bank of america", "bac"], ["bank", "banking", "credit"]],
+    ["V", "Visa", ["v", "visa", "ویزا"], ["visa"], ["payments", "moat", "network effect"]],
+    ["MA", "Mastercard", ["ma", "mastercard", "مسترکارت"], ["mastercard"], ["payments", "moat", "network effect"]],
+    ["AXP", "American Express", ["axp", "amex", "american express"], ["american express", "amex"], ["payments", "moat", "buffett"]],
+    ["COST", "Costco", ["cost", "costco", "کاستکو"], ["costco"], ["retail", "moat", "quality", "compound"]],
+    ["WMT", "Walmart", ["wmt", "walmart", "والمارت"], ["walmart", "wmt"], ["retail", "moat"]],
+    ["KO", "Coca-Cola", ["ko", "coca-cola", "coca cola", "کوکاکولا"], ["coca-cola", "coca cola"], ["brand", "moat", "buffett", "dividend"]],
+    ["PEP", "PepsiCo", ["pep", "pepsi", "pepsico"], ["pepsico", "pepsi"], ["brand", "moat", "dividend"]],
+    ["PG", "Procter & Gamble", ["pg", "procter", "procter & gamble"], ["procter", "procter & gamble"], ["brand", "quality", "dividend"]],
+    ["MCD", "McDonald's", ["mcd", "mcdonald", "mcdonalds", "مک دونالد"], ["mcdonald", "mcdonalds"], ["franchise", "moat", "brand"]],
+    ["DIS", "Disney", ["dis", "disney", "دیزنی"], ["disney"], ["media", "brand", "moat"]],
+    ["HD", "Home Depot", ["hd", "home depot"], ["home depot"], ["retail", "roic", "compound"]],
+    ["LLY", "Eli Lilly", ["lly", "eli lilly", "lilly"], ["eli lilly", "lilly"], ["pharma", "healthcare", "innovation"]],
+    ["NVO", "Novo Nordisk", ["nvo", "novo nordisk"], ["novo nordisk"], ["pharma", "healthcare", "moat"]],
+    ["JNJ", "Johnson & Johnson", ["jnj", "johnson & johnson"], ["johnson & johnson"], ["healthcare", "dividend", "quality"]],
+    ["UNH", "UnitedHealth", ["unh", "unitedhealth"], ["unitedhealth"], ["healthcare", "compound"]],
+    ["XOM", "ExxonMobil", ["xom", "exxon", "exxonmobil"], ["exxon", "exxonmobil"], ["energy", "oil", "dividend"]],
+    ["CVX", "Chevron", ["cvx", "chevron"], ["chevron"], ["energy", "oil", "dividend"]],
+    ["BABA", "Alibaba", ["baba", "alibaba", "علی بابا"], ["alibaba", "baba"], ["china", "valuation"]],
+    ["COIN", "Coinbase", ["coin", "coinbase"], ["coinbase"], ["crypto", "bitcoin", "digital asset"]],
+    ["MSTR", "Strategy / MicroStrategy", ["mstr", "microstrategy"], ["microstrategy", "mstr"], ["bitcoin", "crypto", "volatility"]],
+    ["BTC", "Bitcoin", ["btc", "bitcoin", "بیت کوین"], ["bitcoin", "btc"], ["crypto", "digital asset", "bubble"]],
+    ["SPY", "S&P 500 ETF", ["spy", "voo", "ivv", "spx", "gspc", "sp500", "s&p 500", "s&p", "اس اند پی"], ["s&p 500", "sp500", "spy", "voo"], ["index", "indexing", "passive", "etf", "spiva"]],
+    ["VTI", "Vanguard Index", ["vti", "vt", "vxus", "vanguard", "ونگارد"], ["vanguard", "vti", "vxus"], ["index", "indexing", "passive", "etf"]],
+    ["QQQ", "Nasdaq-100 ETF", ["qqq", "ndx", "nasdaq", "نسدک"], ["nasdaq", "qqq"], ["big tech", "index", "etf", "bubble"]],
+    ["IWM", "Russell 2000 ETF", ["iwm", "russell 2000", "russell"], ["russell 2000", "small cap", "small-cap"], ["size", "factor", "index"]],
+    ["SCHD", "Dividend ETF", ["schd", "vym", "vig"], ["dividend", "etf"], ["yield", "quality", "value"]],
+    ["ARKK", "ARK Innovation", ["arkk", "ark invest", "cathie wood"], ["ark", "cathie wood"], ["innovation", "growth trap", "bubble"]],
+    ["TLT", "US Treasuries", ["tlt", "treasury", "treasuries", "اوراق خزانه"], ["treasury", "treasuries", "treasury bills"], ["bond", "yield", "bessembinder"]],
+    ["MAG7", "Magnificent 7", ["mag7", "mag 7", "magnificent 7", "magnificent seven", "هفت شگفت انگیز"], ["nvidia", "microsoft", "apple", "alphabet", "amazon", "meta", "tesla"], ["concentration", "skewness", "big tech", "ai"]],
+  ];
+
   const SMART_CONCEPTS = [
     { keys: ["هوش مصنوعی", "ای ای", "تکنولوژی", "فناوری", "کاپکس", "ai", "artificial intelligence", "llm", "generative", "tech", "capex"],
       exp: ["ai", "artificial intelligence", "generative", "llm", "tech", "capex", "innovation", "hype"] },
@@ -1830,15 +1892,50 @@
     return edits + (a.length - i) + (b.length - j) <= maxD;
   }
 
+  const hasTerm = (padded, term) => {
+    if (!term || !padded) return false;
+    if (term.length <= 4 && /^[a-z0-9.&-]+$/.test(term)) return padded.includes(" " + term + " ");
+    return padded.includes(term);
+  };
+
   function expandQuery(raw) {
-    const clean = normText(raw);
-    if (!clean) return { clean: "", tokens: [], expanded: [], matchedConcepts: [] };
-    const tokens = clean.split(" ").filter(t => t.length >= 2);
-    const expSet = new Set(), matched = [];
+    const rawTrim = String(raw || "").trim();
+    const rawWords = rawTrim.split(/\s+/).filter(Boolean);
+    const clean = normText(rawTrim.replace(/\$/g, ""));
+    if (!clean) return { clean: "", tokens: [], primary: [], expanded: [], matchedTickers: [], matchedConcepts: [] };
+    const allTokens = clean.split(" ").filter(Boolean);
+    const tokens = allTokens.filter(t => t.length >= 2);
+    const primSet = new Set(), expSet = new Set(), matchedTickers = [], matched = [];
+
+    for (const [sym, label, aliases, prim, themes] of SMART_TICKERS) {
+      const hit = aliases.some(a => {
+        const na = normText(a);
+        if (!na) return false;
+        const isAmbig = AMBIG_TICKERS.has(na);
+        if (isAmbig) {
+          return clean === na || rawWords.some(rw => {
+            const stripped = rw.replace(/^\$/, "");
+            return (rw.startsWith("$") && normText(stripped) === na) || (stripped === stripped.toUpperCase() && stripped.length >= 1 && normText(stripped) === na);
+          });
+        }
+        return clean === na
+          || (na.includes(" ") && clean.includes(na))
+          || allTokens.includes(na)
+          || (na.length >= 5 && tokens.some(t => t.length >= 5 && nearWord(t, na, 1)));
+      });
+      if (hit) {
+        matchedTickers.push(`${sym} · ${label}`);
+        prim.forEach(p => primSet.add(normText(p)));
+        themes.forEach(t => expSet.add(t));
+        matched.push(...themes.slice(0, 3));
+      }
+    }
+
     for (const c of SMART_CONCEPTS) {
       const hit = c.keys.some(k => {
         const nk = normText(k);
-        return clean.includes(nk) || tokens.some(t => t.length >= 4 && nk.length >= 4 && (t === nk || nearWord(t, nk, 1)));
+        return (nk.length <= 3 ? allTokens.includes(nk) : clean.includes(nk))
+          || tokens.some(t => t.length >= 4 && nk.length >= 4 && (t === nk || nearWord(t, nk, 1)));
       });
       if (hit) {
         c.exp.forEach(e => {
@@ -1850,9 +1947,11 @@
     }
     return {
       clean,
-      tokens,
+      tokens: tokens.length ? tokens : allTokens,
+      primary: [...primSet].filter(Boolean),
       expanded: [...expSet],
-      matchedConcepts: [...new Set(matched)].slice(0, 6),
+      matchedTickers: [...new Set(matchedTickers)].slice(0, 3),
+      matchedConcepts: [...new Set(matched)].slice(0, 5),
     };
   }
 
@@ -1871,13 +1970,13 @@
         const ths = themesOf(it);
         const thStr = ths.map(k => (THEME_LABELS[k] || [k]).join(" ")).join(" ");
         const ctStr = (it.countries || []).map(c => `${c} ${(REGION_EN && REGION_EN.of(c)) || ""} ${(REGION_FA && REGION_FA.of(c)) || ""}`).join(" ");
-        const title = normText(it.title);
-        const titleFa = normText(it.title_fa);
-        const authors = normText((it.authors || []).join(" "));
-        const publisher = normText(pub(it.publisher) + " " + (it.venue || ""));
-        const finding = normText([it.stat_en, it.stat_fa, it.finding, it.finding_en, it.finding_fa, it.takeaway_en, it.takeaway_fa].filter(Boolean).join(" "));
-        const summary = normText([it.summary, it.summary_fa, tab?.name, tab?.name_fa, thStr, ctStr, it.year, it.date, (it.methods || []).join(" ")].filter(Boolean).join(" "));
-        const all = `${title} ${titleFa} ${authors} ${publisher} ${finding} ${summary}`;
+        const title = " " + normText(it.title) + " ";
+        const titleFa = " " + normText(it.title_fa) + " ";
+        const authors = " " + normText((it.authors || []).join(" ")) + " ";
+        const publisher = " " + normText(pub(it.publisher) + " " + (it.venue || "")) + " ";
+        const finding = " " + normText([it.stat_en, it.stat_fa, it.finding, it.finding_en, it.finding_fa, it.takeaway_en, it.takeaway_fa].filter(Boolean).join(" ")) + " ";
+        const summary = " " + normText([it.summary, it.summary_fa, tab?.name, tab?.name_fa, thStr, ctStr, it.year, it.date, (it.methods || []).join(" ")].filter(Boolean).join(" ")) + " ";
+        const all = `${title}${titleFa}${authors}${publisher}${finding}${summary}`;
         const words = [...new Set(all.split(" ").filter(w => w.length >= 4))];
         out.push({
           it,
@@ -1900,20 +1999,26 @@
   }
 
   function scoreDoc(d, q) {
-    let sc = 0, directHits = 0;
+    let sc = 0, directHits = 0, primaryHits = 0;
     if (q.clean.length >= 3) {
-      if (d.title.includes(q.clean) || d.titleFa.includes(q.clean)) { sc += 48; directHits++; }
-      else if (d.authors.includes(q.clean)) { sc += 36; directHits++; }
-      else if (d.finding.includes(q.clean)) { sc += 26; directHits++; }
-      else if (d.summary.includes(q.clean)) { sc += 16; directHits++; }
+      if (hasTerm(d.title, q.clean) || hasTerm(d.titleFa, q.clean)) { sc += 48; directHits++; }
+      else if (hasTerm(d.authors, q.clean)) { sc += 36; directHits++; }
+      else if (hasTerm(d.finding, q.clean)) { sc += 26; directHits++; }
+      else if (hasTerm(d.summary, q.clean)) { sc += 16; directHits++; }
+    }
+    for (const pt of q.primary) {
+      if (hasTerm(d.title, pt)) { sc += 64; primaryHits++; }
+      else if (hasTerm(d.authors, pt) || hasTerm(d.publisher, pt)) { sc += 52; primaryHits++; }
+      else if (hasTerm(d.finding, pt)) { sc += 44; primaryHits++; }
+      else if (hasTerm(d.summary, pt)) { sc += 36; primaryHits++; }
     }
     for (const tok of q.tokens) {
       let hit = 0;
-      if (d.title.includes(tok) || d.titleFa.includes(tok)) hit = Math.max(hit, 20);
-      if (d.authors.includes(tok)) hit = Math.max(hit, 16);
-      if (d.publisher.includes(tok)) hit = Math.max(hit, 12);
-      if (d.finding.includes(tok)) hit = Math.max(hit, 11);
-      if (d.summary.includes(tok)) hit = Math.max(hit, 7);
+      if (hasTerm(d.title, tok) || hasTerm(d.titleFa, tok)) hit = Math.max(hit, 20);
+      if (hasTerm(d.authors, tok)) hit = Math.max(hit, 16);
+      if (hasTerm(d.publisher, tok)) hit = Math.max(hit, 12);
+      if (hasTerm(d.finding, tok)) hit = Math.max(hit, 11);
+      if (hasTerm(d.summary, tok)) hit = Math.max(hit, 7);
       if (!hit && tok.length >= 5) {
         const md = tok.length >= 8 ? 2 : 1;
         if (d.words.some(w => nearWord(tok, w, md))) hit = 8;
@@ -1924,12 +2029,12 @@
     for (const e of q.expanded) {
       const ne = normText(e);
       if (!ne) continue;
-      if (d.title.includes(ne)) { sc += 12; expHits++; }
-      else if (d.authors.includes(ne)) { sc += 11; expHits++; }
-      else if (d.finding.includes(ne)) { sc += 8; expHits++; }
-      else if (d.summary.includes(ne)) { sc += 5; expHits++; }
+      if (hasTerm(d.title, ne)) { sc += 12; expHits++; }
+      else if (hasTerm(d.authors, ne)) { sc += 11; expHits++; }
+      else if (hasTerm(d.finding, ne)) { sc += 8; expHits++; }
+      else if (hasTerm(d.summary, ne)) { sc += 5; expHits++; }
     }
-    if (!directHits && !expHits) return 0;
+    if (!directHits && !primaryHits && !expHits) return 0;
     if (q.tokens.length > 1 && directHits >= q.tokens.length) sc += 14;
     return sc + d.boost;
   }
@@ -1937,7 +2042,10 @@
   function hiText(text, terms) {
     const safe = esc(text || "");
     if (!terms.length || !safe) return safe;
-    const pat = terms.filter(t => t.length >= 2).slice(0, 8).map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+    const pat = [...new Set(terms)].filter(t => t.length >= 2).slice(0, 8).map(t => {
+      const e = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return t.length <= 3 && /^[a-z0-9]+$/i.test(t) ? `\\b${e}\\b` : e;
+    }).join("|");
     if (!pat) return safe;
     try { return safe.replace(new RegExp(`(${pat})`, "gi"), "<mark>$1</mark>"); } catch (e) { return safe; }
   }
@@ -1978,9 +2086,9 @@
       const fill = [...canonTop, ...weekTop];
       list = fill.length ? fill : scoped.slice(0, 8);
     } else {
-      if (q.matchedConcepts.length) {
+      if (q.matchedTickers.length || q.matchedConcepts.length) {
         expBox.hidden = false;
-        expBox.innerHTML = `<b>${T("cmdExpanded")}</b>${q.matchedConcepts.map(c => `<i>${esc(c)}</i>`).join("")}`;
+        expBox.innerHTML = `<b>${T("cmdExpanded")}</b>${q.matchedTickers.map(t => `<i class="cmd-tkr">$${esc(t)}</i>`).join("")}${q.matchedConcepts.map(c => `<i>${esc(c)}</i>`).join("")}`;
       } else {
         expBox.hidden = true;
       }
@@ -1994,7 +2102,7 @@
     CMD.results = list;
     CMD.sel = Math.min(CMD.sel, Math.max(0, list.length - 1));
 
-    const hiTerms = [...q.tokens, ...q.expanded.slice(0, 5)];
+    const hiTerms = [...q.primary, ...q.tokens, ...q.expanded.slice(0, 4)];
     const renderItem = (d, i) => {
       const it = d.it, tab = BY_KEY[it.topic];
       const snipRaw = it.canon

@@ -904,6 +904,12 @@ html[lang="fa"] .cmd-head input { font-family: var(--fa-sans); font-size: .96rem
   padding: 2px 7px; border-radius: 999px; background: var(--card); border: 1px solid var(--hair); color: var(--ink-2);
   direction: ltr; unicode-bidi: isolate;
 }
+.cmd-expand i.cmd-tkr {
+  background: var(--brand-ink); color: #FAF8F3; border-color: var(--brand-ink); font-weight: 700;
+}
+[data-theme="dark"] .cmd-expand i.cmd-tkr {
+  color: #0D1110;
+}
 .cmd-body { flex: 1; overflow-y: auto; padding: 10px 12px 14px; min-height: 220px; }
 .cmd-sec-h {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
