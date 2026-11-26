@@ -1907,16 +1907,20 @@
     const tokens = allTokens.filter(t => t.length >= 2);
     const primSet = new Set(), expSet = new Set(), matchedTickers = [], matched = [];
 
+    const skipAmbig = new Set();
     for (const [sym, label, aliases, prim, themes] of SMART_TICKERS) {
+      let matchedAmbig = null;
       const hit = aliases.some(a => {
         const na = normText(a);
         if (!na) return false;
         const isAmbig = AMBIG_TICKERS.has(na);
         if (isAmbig) {
-          return clean === na || rawWords.some(rw => {
+          const ok = clean === na || rawWords.some(rw => {
             const stripped = rw.replace(/^\$/, "");
             return (rw.startsWith("$") && normText(stripped) === na) || (stripped === stripped.toUpperCase() && stripped.length >= 1 && normText(stripped) === na);
           });
+          if (ok && !prim.includes(na)) matchedAmbig = na;
+          return ok;
         }
         return clean === na
           || (na.includes(" ") && clean.includes(na))
@@ -1924,6 +1928,7 @@
           || (na.length >= 5 && tokens.some(t => t.length >= 5 && nearWord(t, na, 1)));
       });
       if (hit) {
+        if (matchedAmbig) skipAmbig.add(matchedAmbig);
         matchedTickers.push(`${sym} · ${label}`);
         prim.forEach(p => primSet.add(normText(p)));
         themes.forEach(t => expSet.add(t));
@@ -1945,9 +1950,11 @@
         matched.push(...c.exp.slice(0, 3));
       }
     }
+    const effTokens = (tokens.length ? tokens : allTokens).filter(t => !skipAmbig.has(t));
     return {
-      clean,
-      tokens: tokens.length ? tokens : allTokens,
+      clean: skipAmbig.has(clean) ? "" : clean,
+      rawClean: clean,
+      tokens: effTokens,
       primary: [...primSet].filter(Boolean),
       expanded: [...expSet],
       matchedTickers: [...new Set(matchedTickers)].slice(0, 3),
@@ -2078,8 +2085,9 @@
     );
     const q = expandQuery(CMD.q);
     let list = [];
-    if (!q.clean) {
+    if (!q.rawClean) {
       expBox.hidden = true;
+      expBox.innerHTML = "";
       const canonTop = scoped.filter(d => d.it.canon).slice(0, 4);
       const latestW = state.index?.issues?.[0]?.week;
       const weekTop = scoped.filter(d => !d.it.canon && d.week === latestW).slice(0, 4);
@@ -2091,6 +2099,7 @@
         expBox.innerHTML = `<b>${T("cmdExpanded")}</b>${q.matchedTickers.map(t => `<i class="cmd-tkr">$${esc(t)}</i>`).join("")}${q.matchedConcepts.map(c => `<i>${esc(c)}</i>`).join("")}`;
       } else {
         expBox.hidden = true;
+        expBox.innerHTML = "";
       }
       list = scoped
         .map(d => ({ d, sc: scoreDoc(d, q) }))
@@ -2126,7 +2135,7 @@
     };
 
     let html = "";
-    if (!q.clean) {
+    if (!q.rawClean) {
       const prompts = T("cmdPrompts") || [];
       html += `<div class="cmd-sec-h"><span>${T("cmdSuggested")}</span></div>
         <div class="cmd-prompts">${prompts.map(p => `<button class="cmd-prompt" type="button" data-cprompt="${esc(p)}">${esc(p)}</button>`).join("")}</div>
