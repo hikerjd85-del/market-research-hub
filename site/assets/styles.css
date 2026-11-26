@@ -871,6 +871,7 @@ html[lang="fa"] .cmd-head input { font-family: var(--fa-sans); font-size: .96rem
   width: 26px; height: 26px; border-radius: 50%; border: 0; background: color-mix(in srgb, var(--ink) 8%, transparent);
   color: var(--ink-2); display: grid; place-items: center; font-size: .78rem; flex: none;
 }
+.cmd-clr[hidden] { display: none; }
 .cmd-clr:hover { background: color-mix(in srgb, var(--ink) 16%, transparent); color: var(--ink); }
 .cmd-esc {
   flex: none; border: 1px solid var(--hair-2); background: var(--paper); color: var(--mute);
